@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ink Sanctum — Pricing Widget Demo & Setup</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d0d0d; color: #d0d0d0; }
+
+  /* NAV */
+  .top-bar {
+    background: #e94560;
+    text-align: center;
+    padding: 0.6rem;
+    font-weight: 700;
+    color: white;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 4rem 1.5rem 3rem;
+    background: linear-gradient(180deg, #111 0%, #0d0d0d 100%);
+  }
+  .hero .for-badge {
+    display: inline-block;
+    background: #e94560;
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: 2.8rem;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-bottom: 0.75rem;
+  }
+  .hero h1 span { color: #e94560; }
+  .hero p {
+    font-size: 1.15rem;
+    color: #888;
+    max-width: 650px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* SECTION WRAPPER */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+  .section-label {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #e94560;
+    padding: 0.3rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .section h2 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+  .section p.desc {
+    color: #888;
+    font-size: 1rem;
+    max-width: 700px;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  /* SPLIT LAYOUT — DEMO + CALLOUTS */
+  .demo-split {
+    display: grid;
+    grid-template-columns: 520px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .demo-frame {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(233,69,96,0.15);
+    border: 1px solid #2a2a2a;
+  }
+  .demo-frame iframe {
+    width: 520px;
+    height: 820px;
+    border: none;
+    display: block;
+  }
+  .demo-try-label {
+    text-align: center;
+    background: #1a1a2e;
+    padding: 0.6rem;
+    color: #888;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* CALLOUTS */
+  .callouts { display: flex; flex-direction: column; gap: 1.25rem; padding-top: 0.5rem; }
+  .callout {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .callout:hover { border-color: #e94560; }
+  .callout .callout-num {
+    display: inline-block;
+    background: #e94560;
+    color: white;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    margin-right: 0.75rem;
+    vertical-align: middle;
+  }
+  .callout h4 {
+    display: inline;
+    color: #fff;
+    font-size: 1rem;
+    vertical-align: middle;
+  }
+  .callout p {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    line-height: 1.6;
+    padding-left: 2.75rem;
+  }
+
+  /* HOW IT WORKS */
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin: 2rem 0;
+  }
+  .how-step {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .how-step .step-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+  .how-step h4 { color: #fff; margin-bottom: 0.4rem; font-size: 0.95rem; }
+  .how-step p { color: #666; font-size: 0.82rem; line-height: 1.5; }
+  .how-step .step-num {
+    display: inline-block;
+    background: #e94560;
+    color: white;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    line-height: 24px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+
+  /* BENEFITS */
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin: 2rem 0;
+  }
+  .benefit {
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .benefit h4 { color: #fff; margin-bottom: 0.4rem; }
+  .benefit p { color: #888; font-size: 0.9rem; line-height: 1.6; }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid #222;
+    margin: 0;
+  }
+
+  /* INTAKE FORM */
+  .intake-section {
+    background: linear-gradient(180deg, #0d0d0d, #111);
+  }
+  .intake-form {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #141414;
+    border: 2px solid #e94560;
+    border-radius: 16px;
+    padding: 2.5rem;
+  }
+  .intake-form h3 {
+    color: #fff;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .intake-form .intake-sub {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  .intake-group {
+    margin-bottom: 1.75rem;
+  }
+  .intake-group label {
+    display: block;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+  }
+  .intake-group .helper {
+    color: #666;
+    font-size: 0.82rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+  .intake-group input, .intake-group textarea, .intake-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    background: #1a1a2e;
+    border: 2px solid #2a2a4a;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  .intake-group input:focus, .intake-group textarea:focus, .intake-group select:focus {
+    outline: none;
+    border-color: #e94560;
+  }
+  .intake-group textarea { min-height: 80px; resize: vertical; }
+  .intake-group select option { background: #1a1a2e; }
+  .intake-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .intake-divider { border: none; border-top: 1px solid #2a2a2a; margin: 1.5rem 0; }
+
+  .intake-number {
+    display: inline-block;
+    background: #e94560;
+    color: white;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 1.1rem;
+    background: linear-gradient(135deg, #e94560, #c62a40);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+    transition: transform 0.15s;
+  }
+  .submit-btn:hover { transform: translateY(-2px); }
+
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+  }
+  .success-msg h3 { color: #43a047; font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .success-msg p { color: #888; font-size: 1rem; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #333;
+    font-size: 0.75rem;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  @media (max-width: 900px) {
+    .demo-split { grid-template-columns: 1fr; }
+    .demo-frame iframe { width: 100%; }
+    .how-steps { grid-template-columns: 1fr 1fr; }
+    .benefits-grid { grid-template-columns: 1fr; }
+    .intake-row { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">PRIVATE DEMO — Built for Nick at Ink Sanctum</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="for-badge">First Adopter Preview</div>
+  <h1>Your Customers Ask <span>"How Much?"</span></h1>
+  <h1 style="font-size:1.8rem;color:#888;font-weight:400;margin-top:-0.25rem;">This Answers Them — On Your Website, In Your Brand.</h1>
+  <p style="margin-top:1.5rem;">A pricing estimator widget that sits on your site, uses your actual rates, matches your look, and turns "how much for a tattoo?" into booked consultations.</p>
+</div>
+
+<!-- LIVE DEMO + CALLOUTS -->
+<div class="section">
+  <span class="section-label">Live Demo</span>
+  <h2>Click Through It — This Is What Your Customers See</h2>
+  <p class="desc">This is running with placeholder pricing right now. Once you fill out the quick form below, I'll calibrate everything to your actual rates. Your shop name, your numbers, your booking link.</p>
+
+  <div class="demo-split">
+    <div>
+      <div class="demo-frame">
+        <div class="demo-try-label">Live &amp; Interactive — Try It</div>
+        <iframe src="widget.html" title="Ink Sanctum Pricing Estimator"></iframe>
+      </div>
+    </div>
+    <div class="callouts">
+      <div class="callout">
+        <span class="callout-num">1</span>
+        <h4>They Pick Their Tattoo Specs</h4>
+        <p>Size, placement, style, color, detail level. Takes 20 seconds. No account, no email required — zero friction.</p>
+      </div>
+      <div class="callout">
+        <span class="callout-num">2</span>
+        <h4>They Get a Real Price Range</h4>
+        <p>Based on YOUR rates, not some random national average. Breaks down every factor so they understand why a rib piece costs more than a forearm piece.</p>
+      </div>
+      <div class="callout">
+        <span class="callout-num">3</span>
+        <h4>Session Plan Shows the Commitment</h4>
+        <p>For bigger pieces it tells them how many sessions, how long each one, healing time between. Sets expectations before they walk in — no surprises.</p>
+      </div>
+      <div class="callout">
+        <span class="callout-num">4</span>
+        <h4>Aftercare Recommendations</h4>
+        <p>Shows them exactly what products to buy for healing. You probably already tell every client the same aftercare routine — this does it for you automatically.</p>
+      </div>
+      <div class="callout">
+        <span class="callout-num">5</span>
+        <h4>"Book a Consultation" Button</h4>
+        <p>Links directly to wherever you want — your booking system, your Instagram DMs, your email, a phone number. Your call.</p>
+      </div>
+      <div class="callout">
+        <span class="callout-num">6</span>
+        <h4>Your Brand, Not Mine</h4>
+        <p>Says "Ink Sanctum" everywhere. Your colors, your name. Customers don't know or care who built it — it's part of your site.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <span class="section-label">Setup</span>
+  <h2>How It Gets On Your Site</h2>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="step-num">1</div>
+      <div class="step-icon">📋</div>
+      <h4>You Fill Out the Form Below</h4>
+      <p>10 minutes. Your rates, your style pricing, your session preferences. That's the only work you do.</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">2</div>
+      <div class="step-icon">⚙️</div>
+      <h4>I Build Your Custom Widget</h4>
+      <p>I plug your numbers in, match your branding, set up your booking link. Takes me a day.</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">3</div>
+      <div class="step-icon">📎</div>
+      <h4>One Line of Code</h4>
+      <p>You paste one snippet on your website. Squarespace, Wix, WordPress — doesn't matter. Copy, paste, done.</p>
+    </div>
+    <div class="how-step">
+      <div class="step-num">4</div>
+      <div class="step-icon">✅</div>
+      <h4>Live on Your Site</h4>
+      <p>Customers start using it immediately. You stop answering "how much?" over DM 30 times a week.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- BENEFITS -->
+<div class="section">
+  <span class="section-label">Why Bother</span>
+  <h2>What This Actually Does For You</h2>
+  <div class="benefits-grid">
+    <div class="benefit">
+      <h4>Kills the "How Much?" DMs</h4>
+      <p>The #1 question every shop gets. This answers it instantly with accurate numbers. The people who still reach out are the ones ready to book.</p>
+    </div>
+    <div class="benefit">
+      <h4>Filters Out Tire Kickers</h4>
+      <p>Someone sees "$800-1,200 for a half sleeve" and disappears? Good — they were never going to book. The ones who stay are real clients.</p>
+    </div>
+    <div class="benefit">
+      <h4>Sets Expectations Early</h4>
+      <p>No more "I thought it would be $50" when they sit down. They already know the range. Consultations go smoother, fewer awkward conversations.</p>
+    </div>
+    <div class="benefit">
+      <h4>Your Site Looks More Professional</h4>
+      <p>Most shop websites are a portfolio page and a phone number. An interactive pricing tool puts you ahead of every other shop in the city.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- INTAKE FORM -->
+<div class="section intake-section" id="intake">
+  <span class="section-label">Your Turn, Nick</span>
+  <h2 style="text-align:center;">Fill This Out & I'll Build Your Custom Widget</h2>
+  <p class="desc" style="text-align:center;margin:0 auto 2rem;">10 minutes max. If it's easier to voice-memo this stuff, that works too — but if you want to type it out, here you go.</p>
+
+  <div class="intake-form" id="intakeForm">
+    <h3>Ink Sanctum — Pricing Setup</h3>
+    <p class="intake-sub">Everything here stays between us. I'm just using it to calibrate the calculator so it gives your customers accurate numbers.</p>
+
+    <!-- Q1 -->
+    <div class="intake-group">
+      <label><span class="intake-number">1</span> What's your shop minimum?</label>
+      <div class="helper">The lowest you'll charge for any tattoo, no matter how small. A lot of shops are $80-150.</div>
+      <input type="text" id="q1" placeholder="e.g. $100">
+    </div>
+
+    <!-- Q2 -->
+    <div class="intake-group">
+      <label><span class="intake-number">2</span> How do you price — hourly or by the piece?</label>
+      <div class="helper">If hourly, what's your rate? If by piece, just give me a few examples and I'll figure out the math. Either way works.</div>
+      <textarea id="q2" placeholder="e.g. $150/hour, or: small forearm piece runs about $200-300, half sleeve is $1,500-2,500..."></textarea>
+    </div>
+
+    <!-- Q3 -->
+    <div class="intake-group">
+      <label><span class="intake-number">3</span> Do you charge more for certain placements?</label>
+      <div class="helper">Ribs, neck, hands, fingers, feet — these are harder to tattoo. Do you charge a premium? Even a rough idea helps.</div>
+      <textarea id="q3" placeholder="e.g. Ribs and hands are about 20% more. Fingers I charge a flat rate because of touch-ups. Neck is same as anywhere else for me..."></textarea>
+    </div>
+
+    <!-- Q4 -->
+    <div class="intake-group">
+      <label><span class="intake-number">4</span> Any price difference between styles?</label>
+      <div class="helper">Does a realistic portrait cost more than a traditional piece of the same size? Script vs illustrative? Just the general idea.</div>
+      <textarea id="q4" placeholder="e.g. Realism and portraits take longer so they're more. Script is usually just the minimum. Geometric stuff takes forever too..."></textarea>
+    </div>
+
+    <!-- Q5 -->
+    <div class="intake-group">
+      <label><span class="intake-number">5</span> Color vs black & grey — any price difference?</label>
+      <div class="helper">Some artists charge more for full color work. Some don't.</div>
+      <input type="text" id="q5" placeholder="e.g. Color is about 15-20% more, or: no difference for me">
+    </div>
+
+    <hr class="intake-divider">
+
+    <!-- Q6 -->
+    <div class="intake-group">
+      <label><span class="intake-number">6</span> What's your max session length?</label>
+      <div class="helper">How long before you typically call it for the day? This helps calculate the number of sessions for bigger pieces.</div>
+      <div class="intake-row">
+        <select id="q6">
+          <option value="">Select...</option>
+          <option value="3">3 hours</option>
+          <option value="4">4 hours</option>
+          <option value="5">5 hours</option>
+          <option value="6">6 hours</option>
+          <option value="8">Full day (8 hours)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="intake-group">
+      <label><span class="intake-number">7</span> Deposit structure?</label>
+      <div class="helper">Do you take deposits for bookings? How much? Does it go toward the final price or is it separate?</div>
+      <input type="text" id="q7" placeholder="e.g. $50 deposit, goes toward the session, or: no deposit for walk-ins">
+    </div>
+
+    <hr class="intake-divider">
+
+    <!-- BOOKING -->
+    <div class="intake-group">
+      <label><span class="intake-number">+</span> Where should the "Book a Consultation" button link?</label>
+      <div class="helper">This is the call-to-action at the end of the estimate. Where do you want it to send people?</div>
+      <input type="text" id="q_booking" placeholder="e.g. my Instagram DMs, my website booking page, my email, phone number...">
+    </div>
+
+    <!-- BRANDING -->
+    <div class="intake-group">
+      <label><span class="intake-number">+</span> Any branding preferences?</label>
+      <div class="helper">The demo uses red + dark theme which fits most shops. If Ink Sanctum has specific brand colors or a logo you want on it, let me know. Otherwise I'll keep it clean.</div>
+      <input type="text" id="q_branding" placeholder="e.g. our color is gold and black, or: whatever looks good, I trust you">
+    </div>
+
+    <!-- ANYTHING ELSE -->
+    <div class="intake-group">
+      <label><span class="intake-number">+</span> Anything else I should know?</label>
+      <div class="helper">Multiple artists with different rates? Specialty styles? Certain things you don't do? Anything that would affect pricing.</div>
+      <textarea id="q_other" placeholder="e.g. I have two artists — I charge $150/hr and my other guy does $120. We don't do face tattoos. We specialize in Japanese and neo-traditional..."></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="submitForm()">Send It Over</button>
+    <p style="font-size:0.75rem;color:#555;text-align:center;margin-top:0.75rem;">This just copies everything so you can paste it in a text or email to Dan. Nothing gets sent to a server.</p>
+  </div>
+
+  <div class="success-msg" id="successMsg">
+    <h3>Copied to Clipboard</h3>
+    <p>Paste it in a text to Dan. Once I get this I'll have your custom widget ready in about a day.</p>
+    <button onclick="document.getElementById('intakeForm').style.display='block'; document.getElementById('successMsg').style.display='none';" style="margin-top:1rem;background:none;border:1px solid #e94560;color:#e94560;padding:0.6rem 1.5rem;border-radius:6px;cursor:pointer;">Edit Answers</button>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FAQ -->
+<div class="section">
+  <span class="section-label">Quick Answers</span>
+  <h2>Stuff You Might Be Wondering</h2>
+  <div style="max-width:700px;">
+    <div style="margin-bottom:1.5rem;">
+      <h4 style="color:#fff;">What does this cost me?</h4>
+      <p style="color:#888;margin-top:0.3rem;">Nothing right now. You're my first shop — your feedback is more valuable to me than charging you. If it works out and you're getting value from it, we can figure something out later. No strings.</p>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <h4 style="color:#fff;">Will it slow down my website?</h4>
+      <p style="color:#888;margin-top:0.3rem;">No. It's a lightweight embed — loads in under a second. Won't affect your page speed at all.</p>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <h4 style="color:#fff;">Can I change the pricing later?</h4>
+      <p style="color:#888;margin-top:0.3rem;">Whenever you want. Raise your rates, change your minimum, add a new artist — just let me know and I'll update it.</p>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <h4 style="color:#fff;">What if someone gets a crazy low estimate and expects that price?</h4>
+      <p style="color:#888;margin-top:0.3rem;">The widget shows a range with a clear disclaimer that says "estimates vary by artist, consult for exact quote." It sets expectations — doesn't lock you in.</p>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <h4 style="color:#fff;">What's in it for you?</h4>
+      <p style="color:#888;margin-top:0.3rem;">Straight up — I'm building this to eventually offer to shops at scale. Having a real shop running it and giving me feedback makes the product 10x better. There's also some aftercare product links at the end of the estimate (Mad Rabbit, Saniderm, etc) and if someone buys through those I get a small referral cut. We're talking like $3-5 here and there. The real value for me is building this right.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Built by Dan Yarmoluk — private demo for Nick at Ink Sanctum
+</div>
+
+<script>
+function submitForm() {
+  const fields = [
+    { label: 'Shop Minimum', id: 'q1' },
+    { label: 'Pricing Structure (hourly/piece)', id: 'q2' },
+    { label: 'Placement Upcharges', id: 'q3' },
+    { label: 'Style Price Differences', id: 'q4' },
+    { label: 'Color vs B&G', id: 'q5' },
+    { label: 'Max Session Length', id: 'q6' },
+    { label: 'Deposit Structure', id: 'q7' },
+    { label: 'Booking Link', id: 'q_booking' },
+    { label: 'Branding Preferences', id: 'q_branding' },
+    { label: 'Anything Else', id: 'q_other' },
+  ];
+
+  let output = "INK SANCTUM — WIDGET PRICING SETUP\n";
+  output += "=" .repeat(40) + "\n\n";
+
+  let hasContent = false;
+  fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    const val = el ? el.value.trim() : '';
+    if (val) {
+      output += f.label + ":\n" + val + "\n\n";
+      hasContent = true;
+    }
+  });
+
+  if (!hasContent) {
+    alert("Fill out at least a few fields so I have something to work with!");
+    return;
+  }
+
+  // Copy to clipboard
+  navigator.clipboard.writeText(output).then(() => {
+    document.getElementById('intakeForm').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+    document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth' });
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = output;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    document.getElementById('intakeForm').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  });
+}
+</script>
+
+</body>
+</html>

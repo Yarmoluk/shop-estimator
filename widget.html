@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tattoo Price Estimator</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; }
+
+  .tattoo-widget {
+    max-width: 520px;
+    margin: 2rem auto;
+    background: #1a1a2e;
+    border-radius: 16px;
+    overflow: hidden;
+    color: #e0e0e0;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+  .tw-header {
+    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+    padding: 1.75rem;
+    text-align: center;
+    border-bottom: 2px solid #e94560;
+  }
+  .tw-header h2 { color: #fff; font-size: 1.5rem; letter-spacing: 0.5px; }
+  .tw-header p { color: #aaa; font-size: 0.9rem; margin-top: 0.3rem; }
+  .tw-shop-name { color: #e94560; font-weight: 700; }
+  .tw-body { padding: 1.75rem; }
+  .tw-group { margin-bottom: 1.25rem; }
+  .tw-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #fff; font-size: 0.95rem; }
+
+  .tw-options { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tw-option {
+    flex: 1; min-width: calc(50% - 0.5rem);
+    padding: 0.7rem; border: 2px solid #2a2a4a; border-radius: 8px;
+    background: #16213e; cursor: pointer; text-align: center;
+    transition: all 0.15s; font-size: 0.9rem;
+  }
+  .tw-option:hover { border-color: #e94560; }
+  .tw-option.selected { border-color: #e94560; background: #0f3460; color: #fff; }
+  .tw-option .opt-icon { font-size: 1.3rem; display: block; margin-bottom: 0.2rem; }
+  .tw-option .opt-label { font-weight: 600; display: block; }
+  .tw-option .opt-desc { font-size: 0.75rem; color: #888; display: block; margin-top: 0.15rem; }
+
+  .tw-slider-group { margin-bottom: 1.25rem; }
+  .tw-slider-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #fff; }
+  .tw-slider-row { display: flex; align-items: center; gap: 1rem; }
+  .tw-slider-row input[type="range"] { flex: 1; accent-color: #e94560; }
+  .tw-slider-val {
+    background: #0f3460; padding: 0.4rem 0.75rem; border-radius: 6px;
+    font-weight: 700; color: #e94560; min-width: 60px; text-align: center;
+  }
+
+  .tw-btn {
+    width: 100%; padding: 1rem; border: none; border-radius: 8px;
+    background: linear-gradient(135deg, #e94560 0%, #c62a40 100%);
+    color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+    letter-spacing: 0.5px; transition: transform 0.15s;
+  }
+  .tw-btn:hover { transform: translateY(-2px); }
+
+  .tw-results { display: none; }
+  .tw-estimate-box {
+    text-align: center; padding: 1.5rem;
+    background: linear-gradient(135deg, #16213e, #0f3460);
+    border-radius: 12px; margin-bottom: 1.25rem;
+    border: 1px solid #e94560;
+  }
+  .tw-estimate-box .est-label { font-size: 0.9rem; color: #aaa; }
+  .tw-estimate-box .est-range { font-size: 2.5rem; font-weight: 800; color: #fff; margin: 0.5rem 0; }
+  .tw-estimate-box .est-note { font-size: 0.8rem; color: #888; }
+
+  .tw-breakdown { margin: 1.25rem 0; }
+  .tw-breakdown-row {
+    display: flex; justify-content: space-between;
+    padding: 0.5rem 0; border-bottom: 1px solid #2a2a4a; font-size: 0.9rem;
+  }
+  .tw-breakdown-row .factor { color: #aaa; }
+  .tw-breakdown-row .impact { color: #e94560; font-weight: 600; }
+
+  .tw-sessions {
+    background: #16213e; border-radius: 10px; padding: 1.25rem; margin: 1.25rem 0;
+    border: 1px solid #2a2a4a;
+  }
+  .tw-sessions h4 { color: #fff; margin-bottom: 0.5rem; }
+  .tw-session-bar {
+    display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;
+  }
+  .tw-session-bar .bar-fill {
+    height: 20px; border-radius: 4px;
+    background: linear-gradient(90deg, #e94560, #ff6b6b);
+    transition: width 0.5s;
+  }
+  .tw-session-bar .bar-label { font-size: 0.8rem; color: #aaa; min-width: 80px; }
+  .tw-session-bar .bar-time { font-size: 0.8rem; color: #888; white-space: nowrap; }
+
+  .tw-aftercare {
+    background: #1e3a1e; border: 1px solid #43a047; border-radius: 10px;
+    padding: 1.25rem; margin: 1.25rem 0;
+  }
+  .tw-aftercare h4 { color: #43a047; margin-bottom: 0.75rem; }
+  .tw-aftercare-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.6rem; background: rgba(255,255,255,0.05); border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  .tw-aftercare-item .ac-info { flex: 1; }
+  .tw-aftercare-item .ac-info strong { display: block; color: #fff; font-size: 0.9rem; }
+  .tw-aftercare-item .ac-info span { font-size: 0.8rem; color: #aaa; }
+  .tw-aftercare-item a {
+    background: #43a047; color: white; padding: 0.4rem 0.75rem;
+    border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .tw-cta-book {
+    text-align: center; padding: 1.25rem;
+    background: linear-gradient(135deg, #0f3460, #16213e);
+    border-radius: 10px; border: 1px solid #e94560;
+  }
+  .tw-cta-book p { margin-bottom: 0.75rem; color: #ccc; }
+  .tw-cta-book a {
+    display: inline-block; background: #e94560; color: white;
+    padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none;
+    font-weight: 700; font-size: 1rem;
+  }
+
+  .tw-disclaimer { font-size: 0.7rem; color: #555; text-align: center; margin-top: 1rem; padding: 0 1rem; }
+
+  .tw-recalc {
+    background: none; border: 1px solid #e94560; color: #e94560;
+    padding: 0.6rem 1.5rem; border-radius: 6px; cursor: pointer;
+    font-size: 0.9rem; display: block; margin: 1rem auto 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="tattoo-widget" id="tattooWidget">
+  <!-- INPUT FORM -->
+  <div id="tw-form">
+    <div class="tw-header">
+      <h2>Tattoo Price Estimator</h2>
+      <p>Get an instant estimate from <span class="tw-shop-name" id="shopName">Ink Sanctum</span></p>
+    </div>
+    <div class="tw-body">
+
+      <div class="tw-group">
+        <label>Tattoo Size</label>
+        <div class="tw-options" id="sizeOptions">
+          <div class="tw-option" data-value="tiny" onclick="selectOption(this,'size')">
+            <span class="opt-icon">·</span>
+            <span class="opt-label">Tiny</span>
+            <span class="opt-desc">Under 2" — finger, wrist</span>
+          </div>
+          <div class="tw-option" data-value="small" onclick="selectOption(this,'size')">
+            <span class="opt-icon">◐</span>
+            <span class="opt-label">Small</span>
+            <span class="opt-desc">2-4" — ankle, forearm</span>
+          </div>
+          <div class="tw-option" data-value="medium" onclick="selectOption(this,'size')">
+            <span class="opt-icon">◉</span>
+            <span class="opt-label">Medium</span>
+            <span class="opt-desc">4-6" — upper arm, calf</span>
+          </div>
+          <div class="tw-option" data-value="large" onclick="selectOption(this,'size')">
+            <span class="opt-icon">⬤</span>
+            <span class="opt-label">Large</span>
+            <span class="opt-desc">6"+ — half sleeve, back piece</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tw-group">
+        <label>Placement</label>
+        <div class="tw-options" id="placementOptions">
+          <div class="tw-option" data-value="easy" onclick="selectOption(this,'placement')">
+            <span class="opt-label">Standard</span>
+            <span class="opt-desc">Arm, leg, back, chest</span>
+          </div>
+          <div class="tw-option" data-value="moderate" onclick="selectOption(this,'placement')">
+            <span class="opt-label">Moderate</span>
+            <span class="opt-desc">Ribs, neck, foot, hand</span>
+          </div>
+          <div class="tw-option" data-value="difficult" onclick="selectOption(this,'placement')">
+            <span class="opt-label">Difficult</span>
+            <span class="opt-desc">Fingers, face, elbow, knee</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tw-group">
+        <label>Style</label>
+        <div class="tw-options" id="styleOptions">
+          <div class="tw-option" data-value="linework" onclick="selectOption(this,'style')">
+            <span class="opt-label">Line Work</span>
+            <span class="opt-desc">Fine line, minimal, script</span>
+          </div>
+          <div class="tw-option" data-value="traditional" onclick="selectOption(this,'style')">
+            <span class="opt-label">Traditional</span>
+            <span class="opt-desc">Bold lines, solid color</span>
+          </div>
+          <div class="tw-option" data-value="realism" onclick="selectOption(this,'style')">
+            <span class="opt-label">Realism</span>
+            <span class="opt-desc">Portraits, photorealistic</span>
+          </div>
+          <div class="tw-option" data-value="geometric" onclick="selectOption(this,'style')">
+            <span class="opt-label">Geometric / Dotwork</span>
+            <span class="opt-desc">Patterns, mandalas, sacred geo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tw-group">
+        <label>Color</label>
+        <div class="tw-options" id="colorOptions">
+          <div class="tw-option" data-value="blackgrey" onclick="selectOption(this,'color')">
+            <span class="opt-label">Black & Grey</span>
+          </div>
+          <div class="tw-option" data-value="color" onclick="selectOption(this,'color')">
+            <span class="opt-label">Full Color</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tw-slider-group">
+        <label>Detail Level</label>
+        <div class="tw-slider-row">
+          <span style="font-size:0.8rem;">Simple</span>
+          <input type="range" id="detail" min="1" max="5" value="3">
+          <span style="font-size:0.8rem;">Intricate</span>
+          <div class="tw-slider-val" id="detailVal">3/5</div>
+        </div>
+      </div>
+
+      <button class="tw-btn" onclick="estimate()">Get My Estimate</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="tw-results" id="tw-results">
+    <div class="tw-header">
+      <h2>Your Tattoo Estimate</h2>
+      <p>From <span class="tw-shop-name" id="shopName2">Your Shop Name</span></p>
+    </div>
+    <div class="tw-body">
+
+      <div class="tw-estimate-box">
+        <div class="est-label">Estimated Price Range</div>
+        <div class="est-range" id="priceRange">$150 — $300</div>
+        <div class="est-note">Based on average shop rates in your area. Custom work varies by artist.</div>
+      </div>
+
+      <div class="tw-breakdown" id="breakdown"></div>
+
+      <div class="tw-sessions" id="sessionInfo"></div>
+
+      <div class="tw-aftercare">
+        <h4>Aftercare Essentials</h4>
+        <p style="font-size:0.85rem;color:#aaa;margin-bottom:0.75rem;">Proper aftercare is the difference between a tattoo that heals beautifully and one that fades, scars, or gets infected. These are what professional artists recommend:</p>
+        <div class="tw-aftercare-item">
+          <div class="ac-info">
+            <strong>Mad Rabbit Tattoo Balm</strong>
+            <span>Natural healing balm — #1 rated tattoo aftercare. Use for first 2 weeks.</span>
+          </div>
+          <a href="#">$19.99 — Shop</a>
+        </div>
+        <div class="tw-aftercare-item">
+          <div class="ac-info">
+            <strong>Hustle Butter Deluxe</strong>
+            <span>Vegan tattoo care — works during AND after the tattoo session.</span>
+          </div>
+          <a href="#">$24.99 — Shop</a>
+        </div>
+        <div class="tw-aftercare-item">
+          <div class="ac-info">
+            <strong>Saniderm Bandage (3-pack)</strong>
+            <span>Medical-grade second-skin bandage. Most shops use this now — keep extras at home.</span>
+          </div>
+          <a href="#">$14.99 — Shop</a>
+        </div>
+        <div class="tw-aftercare-item">
+          <div class="ac-info">
+            <strong>EltaMD UV Sport SPF 50</strong>
+            <span>Best sunscreen for tattoos. UV fades ink fast — protect your investment.</span>
+          </div>
+          <a href="#">$29.99 — Shop</a>
+        </div>
+      </div>
+
+      <div class="tw-cta-book">
+        <p>Ready to book? Consultations are free at most shops.</p>
+        <a href="#" id="bookingLink">Book a Consultation</a>
+        <p style="font-size:0.75rem;color:#666;margin-top:0.5rem;">Bring this estimate — it helps your artist plan your session.</p>
+      </div>
+
+      <button class="tw-recalc" onclick="resetForm()">← Recalculate</button>
+
+      <div class="tw-disclaimer">
+        Estimates are approximate and vary by artist, shop, and location. This tool provides a general range based on industry averages. Always consult directly with your artist for an exact quote. Aftercare product links may earn us a small commission at no cost to you.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// State
+const selections = { size: null, placement: null, style: null, color: null };
+
+// Detail slider live update
+document.getElementById('detail').addEventListener('input', function() {
+  document.getElementById('detailVal').textContent = this.value + '/5';
+});
+
+function selectOption(el, category) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.tw-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selections[category] = el.dataset.value;
+}
+
+function estimate() {
+  if (!selections.size || !selections.placement || !selections.style || !selections.color) {
+    alert('Please select all options to get your estimate.');
+    return;
+  }
+  const detail = parseInt(document.getElementById('detail').value);
+
+  // Base pricing by size (hourly rate approach)
+  const sizeHours = { tiny: 0.5, small: 1.5, medium: 3, large: 6 };
+  const sizeLabels = { tiny: 'Tiny (under 2")', small: 'Small (2-4")', medium: 'Medium (4-6")', large: 'Large (6"+)' };
+  const baseHours = sizeHours[selections.size];
+
+  // Shop minimum and hourly rate
+  const shopMin = 80;
+  const hourlyRate = 150; // national average
+  let baseCost = Math.max(shopMin, baseHours * hourlyRate);
+
+  const factors = [];
+  factors.push({ label: 'Size: ' + sizeLabels[selections.size], impact: '~' + baseHours + ' hours base time', pct: 0 });
+
+  // Placement multiplier
+  const placementMult = { easy: 1.0, moderate: 1.2, difficult: 1.4 };
+  const placementLabels = { easy: 'Standard placement', moderate: 'Moderate difficulty area', difficult: 'Difficult placement (+40%)' };
+  const pm = placementMult[selections.placement];
+  baseCost *= pm;
+  if (pm > 1) factors.push({ label: placementLabels[selections.placement], impact: '+' + Math.round((pm-1)*100) + '%', pct: pm - 1 });
+
+  // Style multiplier
+  const styleMult = { linework: 0.9, traditional: 1.0, realism: 1.5, geometric: 1.3 };
+  const styleLabels = { linework: 'Line work (efficient)', traditional: 'Traditional (standard)', realism: 'Realism (+50% — most time-intensive)', geometric: 'Geometric/Dotwork (+30%)' };
+  const sm = styleMult[selections.style];
+  baseCost *= sm;
+  factors.push({ label: styleLabels[selections.style], impact: sm < 1 ? '-10%' : (sm > 1 ? '+' + Math.round((sm-1)*100) + '%' : 'Standard rate'), pct: sm - 1 });
+
+  // Color
+  const colorMult = selections.color === 'color' ? 1.2 : 1.0;
+  baseCost *= colorMult;
+  if (colorMult > 1) factors.push({ label: 'Full color (+20%)', impact: '+20%', pct: 0.2 });
+
+  // Detail
+  const detailMult = 0.8 + (detail * 0.1); // 0.9 to 1.3
+  baseCost *= detailMult;
+  if (detail > 3) factors.push({ label: 'High detail level (' + detail + '/5)', impact: '+' + Math.round((detailMult-1)*100) + '%', pct: detailMult - 1 });
+  else if (detail < 3) factors.push({ label: 'Simple detail level (' + detail + '/5)', impact: Math.round((detailMult-1)*100) + '%', pct: detailMult - 1 });
+
+  // Range (±25%)
+  const low = Math.max(shopMin, Math.round(baseCost * 0.75 / 10) * 10);
+  const high = Math.round(baseCost * 1.25 / 10) * 10;
+  const mid = Math.round(baseCost / 10) * 10;
+
+  // Sessions
+  const totalHours = baseHours * pm * sm * colorMult * detailMult;
+  const sessionsNeeded = Math.ceil(totalHours / 4); // max 4-hour sessions typical
+  const healingWeeks = selections.size === 'large' ? '4-6' : selections.size === 'medium' ? '2-4' : '2-3';
+
+  // Render
+  document.getElementById('priceRange').textContent = '$' + low + ' — $' + high;
+
+  // Breakdown
+  const bd = document.getElementById('breakdown');
+  bd.innerHTML = '<div style="font-weight:600;color:#fff;margin-bottom:0.5rem;">Price Factors</div>';
+  factors.forEach(f => {
+    bd.innerHTML += '<div class="tw-breakdown-row"><span class="factor">' + f.label + '</span><span class="impact">' + f.impact + '</span></div>';
+  });
+  bd.innerHTML += '<div class="tw-breakdown-row" style="border-top:1px solid #e94560;padding-top:0.75rem;margin-top:0.5rem;"><span style="color:#fff;font-weight:700;">Midpoint Estimate</span><span class="impact" style="font-size:1.1rem;">$' + mid + '</span></div>';
+
+  // Sessions
+  const si = document.getElementById('sessionInfo');
+  if (sessionsNeeded === 1) {
+    si.innerHTML = '<h4>Session Plan: Single Session</h4>' +
+      '<p style="font-size:0.85rem;color:#aaa;">Your tattoo should be completed in one session (~' + Math.round(totalHours * 10) / 10 + ' hours). Block out ' + Math.ceil(totalHours + 0.5) + ' hours including prep and breaks.</p>';
+  } else {
+    si.innerHTML = '<h4>Session Plan: ' + sessionsNeeded + ' Sessions</h4>' +
+      '<p style="font-size:0.85rem;color:#aaa;margin-bottom:0.75rem;">Estimated ' + Math.round(totalHours * 10) / 10 + ' total hours of work, split across ' + sessionsNeeded + ' sessions with ' + healingWeeks + ' weeks healing between each.</p>';
+    for (let s = 1; s <= sessionsNeeded; s++) {
+      const hrs = s < sessionsNeeded ? 4 : Math.round((totalHours % 4 || 4) * 10) / 10;
+      const pct = Math.min(100, Math.round((s / sessionsNeeded) * 100));
+      si.innerHTML += '<div class="tw-session-bar"><span class="bar-label">Session ' + s + '</span><div class="bar-fill" style="width:' + (hrs/4*100) + '%;height:20px;"></div><span class="bar-time">~' + hrs + ' hrs — $' + Math.round(hrs * hourlyRate / 10) * 10 + '</span></div>';
+    }
+    si.innerHTML += '<p style="font-size:0.8rem;color:#666;margin-top:0.5rem;">Tip: Most shops require a deposit ($50-100) that goes toward your first session.</p>';
+  }
+
+  document.getElementById('tw-form').style.display = 'none';
+  document.getElementById('tw-results').style.display = 'block';
+}
+
+function resetForm() {
+  document.getElementById('tw-form').style.display = 'block';
+  document.getElementById('tw-results').style.display = 'none';
+}
+
+// Embeddable config — shop can customize via data attributes
+(function() {
+  const widget = document.getElementById('tattooWidget');
+  const shopName = widget?.dataset?.shop || 'Ink Sanctum';
+  const els = document.querySelectorAll('.tw-shop-name');
+  els.forEach(el => el.textContent = shopName);
+})();
+</script>
+</body>
+</html>
