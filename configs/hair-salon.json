@@ -1,0 +1,139 @@
+{
+  "vertical": "hair-salon",
+  "title": "Price Estimator",
+  "currency": "$",
+  "defaults": {
+    "shop": "Your Hair Salon",
+    "minimum": 40,
+    "hourly": 75,
+    "accent": "#d4a574",
+    "booking": ""
+  },
+  "steps": [
+    {
+      "title": "Service & Stylist",
+      "groups": [
+        {
+          "key": "service",
+          "title": "What service do you need?",
+          "subtitle": "Pick the service that best matches",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Haircut Only", "desc": "Cut and basic style", "hours": 0.5 },
+            { "label": "Cut & Style", "desc": "Cut with blowout or styling", "hours": 1 },
+            { "label": "Cut & Color", "desc": "Single-process color with cut", "hours": 2 },
+            { "label": "Full Color / Highlights", "desc": "Full head color or foil highlights", "hours": 3 },
+            { "label": "Balayage / Ombre", "desc": "Hand-painted color technique", "hours": 3.5 },
+            { "label": "Extensions", "desc": "Tape-in, sew-in, or bonded extensions", "hours": 4 }
+          ]
+        },
+        {
+          "key": "stylist",
+          "title": "Stylist tier",
+          "subtitle": "Experience level affects pricing",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Junior Stylist", "desc": "1\u20133 years experience", "mult": 0.8 },
+            { "label": "Senior Stylist", "desc": "3\u20137 years experience", "mult": 1.0 },
+            { "label": "Master Stylist", "desc": "7+ years, specialized training", "mult": 1.3, "premium": true },
+            { "label": "Salon Owner", "desc": "Owner chair, highest demand", "mult": 1.5, "premium": true }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Hair Type & Length",
+      "groups": [
+        {
+          "key": "hairtype",
+          "title": "What's your hair type?",
+          "subtitle": "Different textures require different time and technique",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Fine / Straight", "desc": "Type 1 \u2014 straight, fine texture", "mult": 0.9 },
+            { "label": "Medium / Wavy", "desc": "Type 2 \u2014 natural wave, medium body", "mult": 1.0 },
+            { "label": "Thick / Curly", "desc": "Type 3 \u2014 defined curls, thick", "mult": 1.15 },
+            { "label": "Coily / Textured", "desc": "Type 4 \u2014 tight coils, textured", "mult": 1.25 }
+          ]
+        },
+        {
+          "key": "length",
+          "title": "Hair length",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Short", "desc": "Above shoulders", "mult": 0.85 },
+            { "label": "Medium", "desc": "Shoulder to mid-back", "mult": 1.0 },
+            { "label": "Long", "desc": "Mid-back to waist", "mult": 1.15 },
+            { "label": "Extra Long", "desc": "Below waist", "mult": 1.3 }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Add-ons",
+      "groups": [
+        {
+          "key": "conditioning",
+          "title": "Deep Conditioning Treatment",
+          "type": "toggle",
+          "mult_on": 1.15,
+          "mult_off": 1.0,
+          "default": false
+        },
+        {
+          "key": "toner",
+          "title": "Toner",
+          "type": "toggle",
+          "mult_on": 1.1,
+          "mult_off": 1.0,
+          "default": false
+        },
+        {
+          "key": "blowout",
+          "title": "Blowout",
+          "type": "toggle",
+          "mult_on": 1.2,
+          "mult_off": 1.0,
+          "default": false
+        }
+      ]
+    }
+  ],
+  "referencePrompt": {
+    "icon": "\ud83d\udcf7",
+    "title": "Bring a photo of the style you want.",
+    "text": "Pinterest, Instagram, or a screenshot. This is the single best thing you can do to make sure you and your stylist are on the same page."
+  },
+  "products": [
+    {
+      "name": "Olaplex No. 3 Hair Perfector",
+      "url": "https://www.amazon.com/dp/B00SNM5US4?tag=shopestimator20",
+      "price": "$30.00",
+      "desc": "Bond repair treatment for color-treated hair."
+    },
+    {
+      "name": "Moroccanoil Treatment",
+      "url": "https://www.amazon.com/dp/B003V8HZC4?tag=shopestimator20",
+      "price": "$48.00",
+      "desc": "Argan oil treatment for all hair types."
+    },
+    {
+      "name": "Wet Brush Original Detangler",
+      "url": "https://www.amazon.com/dp/B005LPN6SA?tag=shopestimator20",
+      "price": "$9.99",
+      "desc": "Gentle detangling for wet or dry hair."
+    },
+    {
+      "name": "Color Wow Dream Coat",
+      "url": "https://www.amazon.com/dp/B07B8Q8LGR?tag=shopestimator20",
+      "price": "$28.00",
+      "desc": "Anti-frizz spray that lasts through washes."
+    }
+  ],
+  "productsTitle": "Recommended Products",
+  "disclaimer": "Estimates are approximate and vary by stylist, salon, and location. Final pricing determined during consultation. Product links may earn a small commission at no extra cost to you."
+}

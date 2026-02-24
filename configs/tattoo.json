@@ -1,0 +1,146 @@
+{
+  "vertical": "tattoo",
+  "title": "Price Estimator",
+  "currency": "$",
+  "defaults": {
+    "shop": "Your Tattoo Shop",
+    "minimum": 80,
+    "hourly": 150,
+    "accent": "#e94560",
+    "booking": ""
+  },
+  "steps": [
+    {
+      "title": "Size & Placement",
+      "groups": [
+        {
+          "key": "size",
+          "title": "How big is the tattoo?",
+          "subtitle": "Pick the closest size reference",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Coin", "desc": "Quarter-sized \u2014 finger, behind ear", "hours": 0.5 },
+            { "label": "Palm", "desc": "Credit card \u2014 wrist, ankle", "hours": 1.5 },
+            { "label": "Hand", "desc": "Your hand \u2014 forearm, shoulder", "hours": 3 },
+            { "label": "Half Sleeve", "desc": "Shoulder to elbow or elbow to wrist", "hours": 8 },
+            { "label": "Full Sleeve", "desc": "Full arm, full leg", "hours": 16 },
+            { "label": "Back Piece", "desc": "Half back or full back", "hours": 24 }
+          ]
+        },
+        {
+          "key": "placement",
+          "title": "Where on the body?",
+          "subtitle": "Premium areas take more skill and time",
+          "type": "select",
+          "layout": "full",
+          "options": [
+            { "label": "Forearm / Upper Arm / Calf / Back / Chest", "desc": "Standard placement", "mult": 1.0 },
+            { "label": "Ribs / Stomach / Foot / Hand / Neck", "desc": "Moderate difficulty", "mult": 1.2, "premium": true },
+            { "label": "Fingers / Face / Throat / Elbow / Knee", "desc": "Difficult placement", "mult": 1.4, "premium": true }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Style & Color",
+      "groups": [
+        {
+          "key": "style",
+          "title": "What style?",
+          "subtitle": "This is the biggest factor in time and cost",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Fine Line", "desc": "Delicate, thin lines", "mult": 0.9 },
+            { "label": "Traditional / Bold", "desc": "Bold outlines, solid fill", "mult": 1.0 },
+            { "label": "Neo-Traditional", "desc": "Bold lines, detailed shading", "mult": 1.15 },
+            { "label": "Illustrative", "desc": "Artistic, custom drawn", "mult": 1.2 },
+            { "label": "Realism / Portrait", "desc": "Photorealistic, most time-intensive", "mult": 1.5 },
+            { "label": "Watercolor", "desc": "Soft edges, color blending", "mult": 1.3 },
+            { "label": "Japanese / Large Scale", "desc": "Irezumi, waves, dragons", "mult": 1.35 },
+            { "label": "Blackwork / Geometric", "desc": "Heavy black, patterns, dotwork", "mult": 1.2 }
+          ]
+        },
+        {
+          "key": "color",
+          "title": "Color?",
+          "type": "select",
+          "layout": "third",
+          "options": [
+            { "label": "Black & Grey", "mult": 1.0 },
+            { "label": "Limited Color (1\u20133)", "mult": 1.1 },
+            { "label": "Full Color", "mult": 1.25 }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Detail & Extras",
+      "groups": [
+        {
+          "key": "detail",
+          "title": "Detail level",
+          "subtitle": "How intricate is the design?",
+          "type": "select",
+          "layout": "third",
+          "options": [
+            { "label": "Simple", "desc": "Clean lines, minimal shading, bold shapes", "mult": 0.85 },
+            { "label": "Medium", "desc": "Some shading, a few elements, moderate detail", "mult": 1.0 },
+            { "label": "Complex", "desc": "Fine detail, heavy shading, multiple elements", "mult": 1.3 }
+          ],
+          "default": 1
+        },
+        {
+          "key": "custom",
+          "title": "Custom design (not flash)",
+          "type": "toggle",
+          "mult_on": 1.15,
+          "mult_off": 1.0,
+          "default": true
+        },
+        {
+          "key": "coverup",
+          "title": "Cover-up of existing tattoo",
+          "type": "toggle",
+          "mult_on": 1.4,
+          "mult_off": 1.0,
+          "default": false
+        }
+      ]
+    }
+  ],
+  "referencePrompt": {
+    "icon": "\ud83d\udcf7",
+    "title": "Bring a reference photo to your consultation.",
+    "text": "Even a rough idea \u2014 a sketch, a screenshot, a Pinterest save \u2014 helps your artist understand your vision and saves everyone time."
+  },
+  "products": [
+    {
+      "name": "Mad Rabbit Tattoo Balm",
+      "url": "https://www.amazon.com/dp/B08FCLNKX6?tag=shopestimator20",
+      "price": "$19.99",
+      "desc": "Natural aftercare balm \u2014 #1 rated. Use for first 2 weeks."
+    },
+    {
+      "name": "Hustle Butter Deluxe",
+      "url": "https://www.amazon.com/dp/B00APC6GIS?tag=shopestimator20",
+      "price": "$24.99",
+      "desc": "Vegan tattoo care \u2014 before, during, and after sessions."
+    },
+    {
+      "name": "Saniderm Bandage (3-pack)",
+      "url": "https://www.amazon.com/dp/B01MUFE078?tag=shopestimator20",
+      "price": "$14.99",
+      "desc": "Medical-grade second-skin bandage for fast healing."
+    },
+    {
+      "name": "EltaMD UV Sport SPF 50",
+      "url": "https://www.amazon.com/dp/B002MSN3QQ?tag=shopestimator20",
+      "price": "$29.99",
+      "desc": "UV fades ink fast \u2014 protect your investment."
+    }
+  ],
+  "productsTitle": "Recommended Aftercare",
+  "disclaimer": "Estimates are approximate and vary by artist, shop, and location. Final pricing determined during consultation. Cover-up complexity may vary. Aftercare links may earn a small commission at no extra cost to you."
+}

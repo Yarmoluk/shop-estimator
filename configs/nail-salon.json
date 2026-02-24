@@ -1,0 +1,140 @@
+{
+  "vertical": "nail-salon",
+  "title": "Price Estimator",
+  "currency": "$",
+  "defaults": {
+    "shop": "Your Nail Salon",
+    "minimum": 25,
+    "hourly": 50,
+    "accent": "#e8a0bf",
+    "booking": ""
+  },
+  "steps": [
+    {
+      "title": "Service & Art",
+      "groups": [
+        {
+          "key": "service",
+          "title": "What service do you need?",
+          "subtitle": "Pick the service that best matches",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Basic Manicure", "desc": "Shape, buff, polish", "hours": 0.5 },
+            { "label": "Gel Manicure", "desc": "Gel polish, longer wear", "hours": 0.75 },
+            { "label": "Acrylic Full Set", "desc": "Full acrylic nail extensions", "hours": 1.5 },
+            { "label": "Acrylic Fill", "desc": "Fill-in for existing acrylics", "hours": 1 },
+            { "label": "Dip Powder", "desc": "Dip powder manicure", "hours": 1 },
+            { "label": "Pedicure", "desc": "Full pedicure service", "hours": 1 },
+            { "label": "Mani + Pedi Combo", "desc": "Both services together", "hours": 1.5 }
+          ]
+        },
+        {
+          "key": "art",
+          "title": "Nail art level",
+          "subtitle": "Art complexity adds time and cost",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "None", "desc": "Solid color or French tip", "mult": 1.0 },
+            { "label": "Simple", "desc": "1\u20132 nails accent design", "mult": 1.1 },
+            { "label": "Moderate", "desc": "Designs on most nails", "mult": 1.25 },
+            { "label": "Complex", "desc": "Hand-painted or 3D nail art", "mult": 1.5, "premium": true }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Length & Shape",
+      "groups": [
+        {
+          "key": "length",
+          "title": "Nail length",
+          "subtitle": "Longer nails require more product and time",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Natural / Short", "desc": "At or near fingertip", "mult": 1.0 },
+            { "label": "Medium", "desc": "Slightly past fingertip", "mult": 1.1 },
+            { "label": "Long", "desc": "Noticeably past fingertip", "mult": 1.2 },
+            { "label": "Extra Long / Stiletto", "desc": "Extended length nails", "mult": 1.35, "premium": true }
+          ]
+        },
+        {
+          "key": "shape",
+          "title": "Nail shape",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Round / Square", "desc": "Classic shapes", "mult": 1.0 },
+            { "label": "Almond / Oval", "desc": "Tapered, elegant shapes", "mult": 1.0 },
+            { "label": "Coffin / Ballerina", "desc": "Tapered with flat tip", "mult": 1.05 },
+            { "label": "Stiletto / Edge", "desc": "Pointed, requires more skill", "mult": 1.1, "premium": true }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Add-ons",
+      "groups": [
+        {
+          "key": "repair",
+          "title": "Nail Repair (single nail fix)",
+          "type": "toggle",
+          "mult_on": 1.1,
+          "mult_off": 1.0,
+          "default": false
+        },
+        {
+          "key": "gelremoval",
+          "title": "Gel Removal",
+          "type": "toggle",
+          "mult_on": 1.15,
+          "mult_off": 1.0,
+          "default": false
+        },
+        {
+          "key": "chrome",
+          "title": "Chrome / Specialty Finish",
+          "type": "toggle",
+          "mult_on": 1.2,
+          "mult_off": 1.0,
+          "default": false
+        }
+      ]
+    }
+  ],
+  "referencePrompt": {
+    "icon": "\ud83d\udcf7",
+    "title": "Save a photo of the nails you want.",
+    "text": "Instagram, TikTok, Pinterest all work. Your nail tech will love you for it."
+  },
+  "products": [
+    {
+      "name": "OPI Nail Envy Strengthener",
+      "url": "https://www.amazon.com/dp/B004LXODM2?tag=shopestimator20",
+      "price": "$18.00",
+      "desc": "Nail strengthening treatment."
+    },
+    {
+      "name": "CND SolarOil",
+      "url": "https://www.amazon.com/dp/B001E6PWLW?tag=shopestimator20",
+      "price": "$8.50",
+      "desc": "Cuticle oil for healthy nails."
+    },
+    {
+      "name": "Beetles Gel Polish Kit",
+      "url": "https://www.amazon.com/dp/B07V39JFKH?tag=shopestimator20",
+      "price": "$9.99",
+      "desc": "At-home gel polish for touch-ups."
+    },
+    {
+      "name": "Modelones Nail Glue",
+      "url": "https://www.amazon.com/dp/B08CXBFJMM?tag=shopestimator20",
+      "price": "$6.99",
+      "desc": "Professional nail glue for repairs."
+    }
+  ],
+  "productsTitle": "Recommended Products",
+  "disclaimer": "Estimates are approximate and vary by nail tech, salon, and location. Final pricing determined during your appointment. Product links may earn a small commission at no extra cost to you."
+}

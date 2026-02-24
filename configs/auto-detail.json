@@ -1,0 +1,134 @@
+{
+  "vertical": "auto-detail",
+  "title": "Price Estimator",
+  "currency": "$",
+  "defaults": {
+    "shop": "Your Detailing Shop",
+    "minimum": 50,
+    "hourly": 65,
+    "accent": "#4a90d9",
+    "booking": ""
+  },
+  "steps": [
+    {
+      "title": "Vehicle & Package",
+      "groups": [
+        {
+          "key": "vehicle",
+          "title": "What type of vehicle?",
+          "subtitle": "Larger vehicles take more time and product",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Sedan / Coupe", "desc": "Standard car size", "mult": 1.0 },
+            { "label": "SUV / Crossover", "desc": "Mid-size vehicles", "mult": 1.25 },
+            { "label": "Truck / Full-Size SUV", "desc": "Larger vehicles", "mult": 1.5 },
+            { "label": "Van / Large Vehicle", "desc": "Sprinter, RV, large trucks", "mult": 1.75, "premium": true }
+          ]
+        },
+        {
+          "key": "package",
+          "title": "Service package",
+          "subtitle": "What level of detail do you need?",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Exterior Wash", "desc": "Hand wash, dry, tire shine", "hours": 0.5 },
+            { "label": "Interior Clean", "desc": "Vacuum, wipe-down, glass", "hours": 0.75 },
+            { "label": "Interior + Exterior", "desc": "Full inside and outside clean", "hours": 1.5 },
+            { "label": "Full Detail", "desc": "Deep clean, polish, protect", "hours": 3 },
+            { "label": "Premium Detail + Ceramic", "desc": "Full detail with ceramic coating", "hours": 5, "premium": true }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Condition",
+      "groups": [
+        {
+          "key": "condition",
+          "title": "Current vehicle condition",
+          "subtitle": "Be honest \u2014 this affects time and pricing the most",
+          "type": "select",
+          "layout": "half",
+          "options": [
+            { "label": "Clean / Maintained", "desc": "Regularly washed, light dust", "mult": 0.85 },
+            { "label": "Average", "desc": "Normal daily driver condition", "mult": 1.0 },
+            { "label": "Dirty / Neglected", "desc": "Months without cleaning, visible grime", "mult": 1.25 },
+            { "label": "Heavy Soil / Pet Hair / Smoke", "desc": "Extreme condition, needs extra work", "mult": 1.5, "premium": true }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Add-ons",
+      "groups": [
+        {
+          "key": "enginebay",
+          "title": "Engine Bay Cleaning",
+          "type": "toggle",
+          "mult_on": 1.15,
+          "mult_off": 1.0,
+          "default": false
+        },
+        {
+          "key": "headlights",
+          "title": "Headlight Restoration",
+          "type": "toggle",
+          "mult_on": 1.1,
+          "mult_off": 1.0,
+          "default": false
+        },
+        {
+          "key": "ceramic",
+          "title": "Ceramic Coating",
+          "type": "toggle",
+          "mult_on": 1.5,
+          "mult_off": 1.0,
+          "default": false
+        },
+        {
+          "key": "odor",
+          "title": "Odor Removal",
+          "type": "toggle",
+          "mult_on": 1.2,
+          "mult_off": 1.0,
+          "default": false
+        }
+      ]
+    }
+  ],
+  "referencePrompt": {
+    "icon": "\ud83d\udcf7",
+    "title": "Take a few photos of your vehicle's current condition.",
+    "text": "Interior and exterior. This helps your detailer prep the right products and give you an accurate timeline."
+  },
+  "products": [
+    {
+      "name": "Chemical Guys Wash & Wax",
+      "url": "https://www.amazon.com/dp/B00BJCMDAW?tag=shopestimator20",
+      "price": "$24.99",
+      "desc": "All-in-one car wash soap with wax protection."
+    },
+    {
+      "name": "Meguiar's Ultimate Quik Wax",
+      "url": "https://www.amazon.com/dp/B06XHKTZGN?tag=shopestimator20",
+      "price": "$14.99",
+      "desc": "Spray-on wax for quick shine between details."
+    },
+    {
+      "name": "CarGuys Super Cleaner",
+      "url": "https://www.amazon.com/dp/B071XB18HF?tag=shopestimator20",
+      "price": "$19.97",
+      "desc": "All-purpose interior cleaner for any surface."
+    },
+    {
+      "name": "MATCC Microfiber Towels",
+      "url": "https://www.amazon.com/dp/B09WDCJXLM?tag=shopestimator20",
+      "price": "$12.99",
+      "desc": "Lint-free drying and polishing cloths."
+    }
+  ],
+  "productsTitle": "Recommended Products",
+  "disclaimer": "Estimates are approximate and vary by detailer, shop, and location. Final pricing determined during inspection. Product links may earn a small commission at no extra cost to you."
+}
