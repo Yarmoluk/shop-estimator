@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:1200px;height:630px;background:#0a0a0f;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;overflow:hidden;position:relative}
+
+  /* Background glow */
+  .glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:900px;height:500px;background:radial-gradient(ellipse,rgba(233,69,96,.12) 0%,transparent 70%);pointer-events:none}
+  .glow2{position:absolute;bottom:-150px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(15,52,96,.3) 0%,transparent 70%);pointer-events:none}
+
+  /* Grid lines */
+  .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px}
+
+  .container{position:relative;z-index:1;display:flex;height:100%;padding:60px 70px}
+
+  /* Left side — text */
+  .left{flex:1;display:flex;flex-direction:column;justify-content:center;padding-right:40px}
+  .badge{display:inline-block;background:rgba(233,69,96,.15);color:#e94560;font-size:13px;font-weight:700;padding:6px 16px;border-radius:20px;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;width:fit-content;border:1px solid rgba(233,69,96,.25)}
+  .title{font-size:52px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:16px;letter-spacing:-1px}
+  .title span{color:#e94560}
+  .subtitle{font-size:20px;color:#8892a4;line-height:1.5;margin-bottom:32px;max-width:480px}
+
+  .features{display:flex;gap:24px}
+  .feature{display:flex;align-items:center;gap:8px}
+  .feature .dot{width:8px;height:8px;border-radius:50%;background:#e94560;flex-shrink:0}
+  .feature span{color:#94a3b8;font-size:14px;font-weight:600}
+
+  .bottom-bar{display:flex;align-items:center;gap:16px;margin-top:36px}
+  .price-tag{background:linear-gradient(135deg,#e94560,#c62a40);color:#fff;font-size:18px;font-weight:800;padding:10px 24px;border-radius:10px;letter-spacing:1px}
+  .platforms{color:#555;font-size:13px;letter-spacing:.5px}
+
+  /* Right side — widget preview */
+  .right{width:320px;flex-shrink:0;display:flex;align-items:center}
+  .widget-preview{width:100%;background:#1a1a2e;border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid #2a2a3a}
+  .wp-header{background:linear-gradient(135deg,#16213e,#0f3460);padding:20px;text-align:center;border-bottom:3px solid #e94560}
+  .wp-header h3{color:#fff;font-size:16px;font-weight:700;margin-bottom:2px}
+  .wp-header p{color:#94a3b8;font-size:11px}
+  .wp-body{padding:16px}
+  .wp-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#e94560;margin-bottom:8px}
+  .wp-options{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .wp-opt{flex:1;min-width:calc(50% - 3px);background:#16213e;border:2px solid transparent;border-radius:8px;padding:8px 6px;text-align:center;color:#94a3b8;font-size:11px;font-weight:600}
+  .wp-opt.active{border-color:#e94560;background:#1e2a45;color:#fff}
+  .wp-opt small{display:block;font-size:9px;color:#64748b;margin-top:2px;font-weight:400}
+  .wp-result{background:linear-gradient(135deg,#16213e,#0f3460);border-radius:10px;padding:16px;text-align:center;margin-top:4px;border:1px solid rgba(233,69,96,.3)}
+  .wp-result .price{font-size:24px;font-weight:800;color:#e94560;margin-bottom:2px}
+  .wp-result .note{font-size:9px;color:#94a3b8}
+  .wp-btn{display:block;width:100%;background:linear-gradient(135deg,#e94560,#c62a40);color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;font-weight:700;margin-top:10px;text-align:center}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="glow2"></div>
+<div class="grid"></div>
+<div class="container">
+  <div class="left">
+    <div class="badge">Free Forever</div>
+    <div class="title">Pricing Widget<br>For <span>Your Shop</span></div>
+    <div class="subtitle">Customers estimate their own price. You get serious leads. One line of code.</div>
+    <div class="features">
+      <div class="feature"><div class="dot"></div><span>Your Brand</span></div>
+      <div class="feature"><div class="dot"></div><span>Any Website</span></div>
+      <div class="feature"><div class="dot"></div><span>Mobile Ready</span></div>
+      <div class="feature"><div class="dot"></div><span>Zero Cost</span></div>
+    </div>
+    <div class="bottom-bar">
+      <div class="price-tag">$0</div>
+      <div class="platforms">WordPress &bull; Squarespace &bull; Wix &bull; Shopify</div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="widget-preview">
+      <div class="wp-header">
+        <h3>Iron & Ink Tattoo</h3>
+        <p>Price Estimator</p>
+      </div>
+      <div class="wp-body">
+        <div class="wp-label">Tattoo Size</div>
+        <div class="wp-options">
+          <div class="wp-opt">Coin<small>Finger, ear</small></div>
+          <div class="wp-opt active">Palm<small>Wrist, ankle</small></div>
+          <div class="wp-opt">Hand<small>Forearm</small></div>
+          <div class="wp-opt">Sleeve<small>Full arm</small></div>
+        </div>
+        <div class="wp-label">Style</div>
+        <div class="wp-options">
+          <div class="wp-opt">Fine Line</div>
+          <div class="wp-opt active">Traditional</div>
+          <div class="wp-opt">Realism</div>
+          <div class="wp-opt">Japanese</div>
+        </div>
+        <div class="wp-result">
+          <div class="price">$180 — $320</div>
+          <div class="note">Final quote requires consultation</div>
+        </div>
+        <div class="wp-btn">Get Your Exact Quote &rarr;</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
