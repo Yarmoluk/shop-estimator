@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Free Pricing Widget For Your Shop</title>
+<meta name="description" content="Free pricing estimator widget for tattoo shops, salons, and small businesses. Install in 60 seconds.">
+<meta property="og:title" content="Free Pricing Widget For Your Shop">
+<meta property="og:description" content="Stop answering 'how much?' — let customers estimate prices right on your website. Free forever.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yarmoluk.github.io/shop-estimator/go.html">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#d0d0d8;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+  /* ── HERO ── */
+  .hero{text-align:center;padding:3rem 1.5rem 2rem;background:linear-gradient(180deg,#0f0f1a 0%,#0a0a0f 100%);position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(233,69,96,.12) 0%,transparent 70%);pointer-events:none}
+  .badge{display:inline-block;background:rgba(233,69,96,.15);color:#e94560;font-size:.7rem;font-weight:700;padding:.35rem .9rem;border-radius:20px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.25rem;position:relative}
+  .hero h1{font-size:clamp(1.8rem,6vw,2.6rem);font-weight:900;color:#fff;line-height:1.2;margin-bottom:.75rem;position:relative}
+  .hero h1 span{color:#e94560}
+  .hero p{font-size:1rem;color:#888;max-width:500px;margin:0 auto 1.5rem;position:relative}
+  .hero-stats{display:flex;justify-content:center;gap:1.5rem;margin-bottom:2rem;position:relative}
+  .hero-stat{text-align:center}
+  .hero-stat .num{font-size:1.4rem;font-weight:800;color:#e94560}
+  .hero-stat .lbl{font-size:.7rem;color:#666;text-transform:uppercase;letter-spacing:.5px}
+
+  /* ── CTA BUTTONS ── */
+  .cta-stack{display:flex;flex-direction:column;gap:.75rem;max-width:360px;margin:0 auto 2rem;position:relative;padding:0 1rem}
+  .btn{display:block;padding:1rem 1.5rem;border-radius:12px;text-decoration:none;font-weight:700;font-size:1rem;text-align:center;transition:transform .15s,box-shadow .15s;border:none;cursor:pointer}
+  .btn:active{transform:scale(.97)}
+  .btn-primary{background:linear-gradient(135deg,#e94560,#c62a40);color:#fff;box-shadow:0 4px 20px rgba(233,69,96,.35);font-size:1.1rem}
+  .btn-primary:hover{box-shadow:0 6px 30px rgba(233,69,96,.5)}
+  .btn-secondary{background:#16213e;color:#e94560;border:2px solid #e94560}
+  .btn-ghost{background:transparent;color:#888;font-size:.85rem;font-weight:600}
+  .free-tag{display:inline-block;background:#43a047;color:#fff;font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:4px;margin-left:.5rem;vertical-align:middle;letter-spacing:.5px}
+
+  /* ── PHONE MOCKUP ── */
+  .phone-section{padding:0 1.5rem 3rem;text-align:center}
+  .phone-frame{max-width:320px;margin:0 auto;background:#1a1a2e;border-radius:32px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.6);border:2px solid #2a2a3a}
+  .phone-notch{width:120px;height:24px;background:#0a0a0f;border-radius:0 0 16px 16px;margin:0 auto 8px}
+  .phone-screen{border-radius:20px;overflow:hidden;background:#0a0a0f;max-height:500px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .phone-screen::-webkit-scrollbar{display:none}
+  .phone-home{width:40px;height:5px;background:#333;border-radius:3px;margin:8px auto 4px}
+  .phone-label{font-size:.75rem;color:#555;margin-top:1rem;font-style:italic}
+
+  /* ── PROOF POINTS ── */
+  .proof{padding:2.5rem 1.5rem;background:#0d0d14}
+  .proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;max-width:400px;margin:0 auto}
+  .proof-card{background:#12121e;border:1px solid #1e1e2e;border-radius:12px;padding:1.25rem;text-align:center}
+  .proof-card .icon{font-size:1.5rem;margin-bottom:.4rem}
+  .proof-card h4{color:#fff;font-size:.85rem;margin-bottom:.25rem}
+  .proof-card p{color:#666;font-size:.75rem;line-height:1.4}
+
+  /* ── HOW IT WORKS ── */
+  .how{padding:2.5rem 1.5rem;background:#0a0a0f}
+  .how h2{text-align:center;color:#fff;font-size:1.4rem;margin-bottom:.5rem}
+  .how .sub{text-align:center;color:#666;font-size:.85rem;margin-bottom:2rem}
+  .steps{max-width:400px;margin:0 auto}
+  .step{display:flex;gap:1rem;margin-bottom:1.5rem;align-items:flex-start}
+  .step-num{flex-shrink:0;width:36px;height:36px;background:linear-gradient(135deg,#e94560,#c62a40);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.9rem}
+  .step-content h4{color:#fff;font-size:.95rem;margin-bottom:.15rem}
+  .step-content p{color:#888;font-size:.82rem}
+  .step-time{color:#e94560;font-size:.7rem;font-weight:700}
+
+  /* ── VERTICALS ── */
+  .verticals{padding:2.5rem 1.5rem;background:#0d0d14}
+  .verticals h2{text-align:center;color:#fff;font-size:1.3rem;margin-bottom:1.5rem}
+  .vert-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;max-width:400px;margin:0 auto}
+  .vert-card{background:#12121e;border:1px solid #1e1e2e;border-radius:12px;padding:1rem;text-align:center;transition:border-color .2s}
+  .vert-card:hover{border-color:#e94560}
+  .vert-card .vert-icon{font-size:1.8rem;margin-bottom:.3rem}
+  .vert-card h4{color:#fff;font-size:.85rem}
+  .vert-card p{color:#666;font-size:.7rem}
+
+  /* ── QR SECTION ── */
+  .qr-section{padding:2.5rem 1.5rem;background:#0a0a0f;text-align:center}
+  .qr-section h2{color:#fff;font-size:1.2rem;margin-bottom:.5rem}
+  .qr-section p{color:#666;font-size:.85rem;margin-bottom:1.5rem}
+  .qr-box{display:inline-block;background:#fff;padding:16px;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.3)}
+  .qr-box img{display:block;width:180px;height:180px}
+  .qr-label{margin-top:.75rem;font-size:.7rem;color:#555}
+
+  /* ── INSTALL CODE ── */
+  .install{padding:2.5rem 1.5rem;background:#0d0d14}
+  .install h2{text-align:center;color:#fff;font-size:1.2rem;margin-bottom:.5rem}
+  .install .sub{text-align:center;color:#666;font-size:.82rem;margin-bottom:1.5rem}
+  .code-wrap{max-width:400px;margin:0 auto;position:relative}
+  .code-block{background:#0a0a12;border:1px solid #1e1e2e;border-radius:12px;padding:1rem;font-family:'SF Mono',Monaco,'Courier New',monospace;font-size:.7rem;line-height:1.8;overflow-x:auto;color:#94a3b8;white-space:pre-wrap;word-break:break-all}
+  .code-block .t{color:#e94560}
+  .code-block .a{color:#f5a623}
+  .code-block .v{color:#43a047}
+  .copy-btn{display:block;width:100%;margin-top:.75rem;padding:.85rem;background:#e94560;color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer;transition:background .2s}
+  .copy-btn:hover{background:#c62a40}
+  .copy-btn.copied{background:#43a047}
+
+  /* ── BOTTOM CTA ── */
+  .bottom-cta{padding:3rem 1.5rem 4rem;background:#0a0a0f;text-align:center}
+  .bottom-cta h2{color:#fff;font-size:1.5rem;margin-bottom:.5rem}
+  .bottom-cta p{color:#888;font-size:.9rem;margin-bottom:1.5rem}
+
+  /* ── FOOTER ── */
+  .footer{text-align:center;padding:1.5rem;border-top:1px solid #151520;background:#08080d}
+  .footer p{color:#444;font-size:.7rem}
+  .footer a{color:#e94560;text-decoration:none}
+
+  /* ── SHARE ROW ── */
+  .share-row{display:flex;justify-content:center;gap:.75rem;margin-top:1rem}
+  .share-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;background:#16213e;border-radius:8px;color:#94a3b8;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .2s}
+  .share-btn:hover{background:#1e2a45;color:#fff}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="badge">100% Free — No Catch</div>
+  <h1>Your Customers Ask<br><span>"How Much?"</span></h1>
+  <p>This answers them. Right on your website. With your rates, your brand, your booking link.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">60s</div><div class="lbl">To Install</div></div>
+    <div class="hero-stat"><div class="num">$0</div><div class="lbl">Forever</div></div>
+    <div class="hero-stat"><div class="num">0</div><div class="lbl">Maintenance</div></div>
+  </div>
+  <div class="cta-stack">
+    <a href="#demo" class="btn btn-primary">See It Live <span class="free-tag">FREE</span></a>
+    <a href="#install" class="btn btn-secondary">Get The Code</a>
+  </div>
+</section>
+
+<!-- ═══ PHONE MOCKUP ═══ -->
+<section class="phone-section" id="demo">
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+      <script src="engine.js" data-config="configs/tattoo.json" data-shop="Iron & Ink Tattoo" data-minimum="100" data-hourly="175"></script>
+    </div>
+    <div class="phone-home"></div>
+  </div>
+  <p class="phone-label">This is live — try it. This is what your customers see.</p>
+</section>
+
+<!-- ═══ PROOF POINTS ═══ -->
+<section class="proof">
+  <div class="proof-grid">
+    <div class="proof-card">
+      <div class="icon">&#x1f3a8;</div>
+      <h4>Your Brand</h4>
+      <p>Your name, your colors, your rates. Nobody knows you didn't build it.</p>
+    </div>
+    <div class="proof-card">
+      <div class="icon">&#x1f4f1;</div>
+      <h4>Mobile First</h4>
+      <p>90% of your customers browse on their phone. This is built for that.</p>
+    </div>
+    <div class="proof-card">
+      <div class="icon">&#x1f4c5;</div>
+      <h4>Books Clients</h4>
+      <p>"Get Your Exact Quote" links straight to your booking page.</p>
+    </div>
+    <div class="proof-card">
+      <div class="icon">&#x26a1;</div>
+      <h4>Zero Effort</h4>
+      <p>Paste one line. It works forever. Auto-updates. Never breaks.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how">
+  <h2>Live On Your Site In 3 Steps</h2>
+  <p class="sub">No developer needed. Seriously.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Copy the embed code</h4>
+        <p>One snippet. Customize your shop name and hourly rate.</p>
+        <span class="step-time">10 seconds</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Paste it on your website</h4>
+        <p>WordPress, Squarespace, Wix, Shopify — any website builder. Just paste.</p>
+        <span class="step-time">30 seconds</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Done. Customers start estimating.</h4>
+        <p>They pick size, style, placement — get a price range — and click "Book." You stop answering "how much?" on DM.</p>
+        <span class="step-time">Forever</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ VERTICALS ═══ -->
+<section class="verticals">
+  <h2>Works For Any Service Business</h2>
+  <div class="vert-grid">
+    <div class="vert-card">
+      <div class="vert-icon">&#x1f489;</div>
+      <h4>Tattoo Shops</h4>
+      <p>Size, style, placement, cover-ups</p>
+    </div>
+    <div class="vert-card">
+      <div class="vert-icon">&#x1f487;</div>
+      <h4>Hair Salons</h4>
+      <p>Cut, color, stylist tier, add-ons</p>
+    </div>
+    <div class="vert-card">
+      <div class="vert-icon">&#x1f485;</div>
+      <h4>Nail Salons</h4>
+      <p>Service, art, length, shape</p>
+    </div>
+    <div class="vert-card">
+      <div class="vert-icon">&#x1f697;</div>
+      <h4>Auto Detail</h4>
+      <p>Vehicle, package, condition, add-ons</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ QR CODE ═══ -->
+<section class="qr-section">
+  <h2>Share This With Any Shop Owner</h2>
+  <p>Scan or screenshot — opens this page on their phone.</p>
+  <div class="qr-box">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://yarmoluk.github.io/shop-estimator/go.html&color=e94560&bgcolor=ffffff" alt="QR Code" width="180" height="180">
+  </div>
+  <p class="qr-label">yarmoluk.github.io/shop-estimator/go.html</p>
+  <div class="share-row">
+    <a href="sms:?body=Check this out — free pricing widget for your shop website: https://yarmoluk.github.io/shop-estimator/go.html" class="share-btn">&#x1f4ac; Text It</a>
+    <a href="https://wa.me/?text=Free%20pricing%20widget%20for%20your%20shop%20website%3A%20https%3A%2F%2Fyarmoluk.github.io%2Fshop-estimator%2Fgo.html" class="share-btn" target="_blank">&#x1f4e9; WhatsApp</a>
+  </div>
+</section>
+
+<!-- ═══ INSTALL CODE ═══ -->
+<section class="install" id="install">
+  <h2>The Embed Code</h2>
+  <p class="sub">Copy this. Paste it anywhere on your website. That's the whole install.</p>
+  <div class="code-wrap">
+    <div class="code-block"><span class="t">&lt;script</span> <span class="a">src=</span><span class="v">"https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js"</span>
+  <span class="a">data-config=</span><span class="v">"https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/tattoo.json"</span>
+  <span class="a">data-shop=</span><span class="v">"Your Shop Name"</span>
+  <span class="a">data-minimum=</span><span class="v">"100"</span>
+  <span class="a">data-hourly=</span><span class="v">"150"</span>
+  <span class="a">data-accent=</span><span class="v">"#e94560"</span>
+  <span class="a">data-booking=</span><span class="v">"https://your-booking-link.com"</span><span class="t">&gt;&lt;/script&gt;</span></div>
+    <button class="copy-btn" id="copyBtn" onclick="copyCode()">Copy Code To Clipboard</button>
+  </div>
+</section>
+
+<!-- ═══ PLATFORM GUIDES ═══ -->
+<section class="how" style="background:#0d0d14">
+  <h2>Where To Paste It</h2>
+  <p class="sub">Pick your platform — takes 30 seconds.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" style="background:linear-gradient(135deg,#21759b,#1a5f7a);font-size:.6rem">WP</div>
+      <div class="step-content">
+        <h4>WordPress</h4>
+        <p>Pages &rarr; Edit your pricing page &rarr; Add a "Custom HTML" block &rarr; Paste the code &rarr; Publish.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:linear-gradient(135deg,#000,#333);font-size:.6rem">SQ</div>
+      <div class="step-content">
+        <h4>Squarespace</h4>
+        <p>Edit page &rarr; Add Block &rarr; Code &rarr; Paste the code &rarr; Save.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:linear-gradient(135deg,#0C6EFC,#0a5bcc);font-size:.6rem">WX</div>
+      <div class="step-content">
+        <h4>Wix</h4>
+        <p>Add &rarr; Embed &rarr; Custom Element or HTML iframe &rarr; Paste the code &rarr; Publish.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:linear-gradient(135deg,#96bf48,#7ba03b);font-size:.6rem">SH</div>
+      <div class="step-content">
+        <h4>Shopify</h4>
+        <p>Online Store &rarr; Pages &rarr; Edit &rarr; Show HTML (&lt;&gt;) &rarr; Paste the code &rarr; Save.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BOTTOM CTA ═══ -->
+<section class="bottom-cta">
+  <h2>Stop Answering "How Much?"</h2>
+  <p>Your widget is free. Your time isn't.</p>
+  <div class="cta-stack" style="margin:0 auto">
+    <button class="btn btn-primary" onclick="document.getElementById('copyBtn').scrollIntoView({behavior:'smooth'});setTimeout(function(){copyCode()},600)">Get The Code — It's Free</button>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <p>Built by <a href="https://github.com/Yarmoluk" target="_blank">Dan Yarmoluk</a></p>
+  <p style="margin-top:.25rem">Aftercare product links include affiliate recommendations.</p>
+</footer>
+
+<script>
+function copyCode(){
+  var code='<!-- Pricing Estimator Widget -->\n<script src="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js"\n  data-config="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/tattoo.json"\n  data-shop="Your Shop Name"\n  data-minimum="100"\n  data-hourly="150"\n  data-accent="#e94560"\n  data-booking="https://your-booking-link.com"><\/script>';
+  navigator.clipboard.writeText(code).then(function(){
+    var b=document.getElementById('copyBtn');
+    b.textContent='Copied!';b.classList.add('copied');
+    setTimeout(function(){b.textContent='Copy Code To Clipboard';b.classList.remove('copied')},2500);
+  });
+}
+</script>
+
+</body>
+</html>
