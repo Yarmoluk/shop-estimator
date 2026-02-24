@@ -178,6 +178,10 @@
 ".te-product-link{flex-shrink:0;margin-left:12px;padding:7px 14px;background:#43a047;color:#fff;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s}\n" +
 ".te-product-link:hover{background:#388e3c}\n" +
 ".te-disclaimer{font-size:11px;color:#64748b;text-align:center;margin-top:16px;line-height:1.5}\n" +
+".te-powered{text-align:center;margin-top:12px;padding-top:12px;border-top:1px solid #ffffff0a}\n" +
+".te-powered a{color:#64748b;text-decoration:none;font-size:11px;font-weight:500;letter-spacing:.3px;transition:color .2s}\n" +
+".te-powered a:hover{color:" + a + "}\n" +
+".te-powered a span{opacity:.6}\n" +
 "@media(max-width:480px){.te-root{margin:12px 8px;border-radius:12px}.te-body{padding:18px 16px}.te-opt{flex:1 1 100%}.te-opt-third{flex:1 1 100%}.te-result-price .te-range{font-size:26px}.te-nav-row{flex-direction:column}}\n";
 
     var styleEl = document.createElement("style");
@@ -386,6 +390,15 @@
       }
 
       buildNav(body);
+
+      /* Powered by — on every step */
+      var poweredForm = el("div", "te-powered");
+      var poweredFormLink = el("a", "", "<span>Powered by</span> Shop Estimator");
+      poweredFormLink.href = "https://yarmoluk.github.io/shop-estimator/go.html";
+      poweredFormLink.target = "_blank";
+      poweredFormLink.rel = "noopener";
+      poweredForm.appendChild(poweredFormLink);
+      body.appendChild(poweredForm);
     }
 
     /* ── Calculate & Show Results ── */
@@ -547,6 +560,15 @@
       if (config.disclaimer) {
         body.appendChild(el("div", "te-disclaimer", config.disclaimer));
       }
+
+      /* Powered by */
+      var powered = el("div", "te-powered");
+      var poweredLink = el("a", "", "<span>Powered by</span> Shop Estimator");
+      poweredLink.href = "https://yarmoluk.github.io/shop-estimator/go.html";
+      poweredLink.target = "_blank";
+      poweredLink.rel = "noopener";
+      powered.appendChild(poweredLink);
+      body.appendChild(powered);
     }
 
     /* ── Start ── */
