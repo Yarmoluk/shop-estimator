@@ -163,17 +163,26 @@
 ".te-ref-text{font-size:13px;color:#94a3b8;line-height:1.5}\n" +
 ".te-ref-text strong{color:#fff}\n" +
 /* Image upload styles */
-".te-upload-zone{background:#16213e;border:2px dashed #2a2a4a;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px;cursor:pointer;transition:border-color .2s,background .2s}\n" +
+".te-upload-zone{background:#16213e;border:2px dashed #2a2a4a;border-radius:12px;padding:20px;text-align:center;margin-bottom:12px;cursor:pointer;transition:border-color .2s,background .2s}\n" +
 ".te-upload-zone:hover{border-color:" + a + "66;background:#1e2a45}\n" +
-".te-upload-zone.te-has-files{border-color:" + a + "44;border-style:solid}\n" +
+".te-upload-zone.te-has-files{border-color:" + a + "44;border-style:solid;padding:14px}\n" +
 ".te-upload-icon{font-size:32px;margin-bottom:8px}\n" +
 ".te-upload-label{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}\n" +
 ".te-upload-sub{font-size:12px;color:#64748b}\n" +
 ".te-upload-input{display:none}\n" +
-".te-upload-previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center}\n" +
-".te-upload-thumb{width:72px;height:72px;border-radius:8px;object-fit:cover;border:2px solid " + a + "44}\n" +
-".te-upload-thumb-wrap{position:relative;display:inline-block}\n" +
-".te-upload-remove{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#e94560;color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;line-height:20px;text-align:center;padding:0}\n" +
+".te-upload-cards{margin-top:12px}\n" +
+".te-upload-card{display:flex;gap:10px;background:#0f1a2e;border:1px solid #2a2a4a;border-radius:10px;padding:10px;margin-bottom:8px;text-align:left;position:relative}\n" +
+".te-upload-card:last-child{margin-bottom:0}\n" +
+".te-upload-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;border:2px solid " + a + "44;flex-shrink:0}\n" +
+".te-upload-card-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}\n" +
+".te-upload-type-select{background:#16213e;border:1px solid #2a2a4a;border-radius:6px;padding:4px 8px;color:#e0e0e0;font-size:11px;font-family:inherit;outline:none;width:100%;-webkit-appearance:none;appearance:none}\n" +
+".te-upload-type-select:focus{border-color:" + a + "}\n" +
+".te-upload-caption{background:#16213e;border:1px solid #2a2a4a;border-radius:6px;padding:6px 8px;color:#e0e0e0;font-size:12px;font-family:inherit;outline:none;width:100%;resize:none}\n" +
+".te-upload-caption::placeholder{color:#4a5568}\n" +
+".te-upload-caption:focus{border-color:" + a + "}\n" +
+".te-upload-remove{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:50%;background:#e94560;color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;line-height:20px;text-align:center;padding:0}\n" +
+".te-upload-add-more{display:block;width:100%;padding:10px;background:transparent;border:2px dashed #2a2a4a;border-radius:10px;color:" + a + ";font-size:12px;font-weight:600;cursor:pointer;transition:border-color .2s;font-family:inherit;margin-top:8px;margin-bottom:12px}\n" +
+".te-upload-add-more:hover{border-color:" + a + "}\n" +
 /* Artist selector styles */
 ".te-artist-card{flex:1 1 100%;padding:14px 16px;background:#16213e;border:2px solid transparent;border-radius:10px;cursor:pointer;text-align:left;transition:border-color .2s,background .2s}\n" +
 ".te-artist-card:hover{border-color:" + a + "44;background:#1e2a45}\n" +
@@ -444,65 +453,128 @@
       if (!uploadCfg) return;
 
       var maxFiles = uploadCfg.maxFiles || 3;
-      var zone = el("div", "te-upload-zone" + (STATE.uploads.length > 0 ? " te-has-files" : ""));
+      var categories = uploadCfg.categories || [
+        "Style inspiration",
+        "Placement idea",
+        "Existing tattoo (cover-up)",
+        "Size reference",
+        "Other"
+      ];
+
+      /* Hidden file input */
       var input = document.createElement("input");
       input.type = "file";
       input.accept = "image/*";
-      input.multiple = maxFiles > 1;
+      input.multiple = true;
       input.className = "te-upload-input";
+      body.appendChild(input);
 
-      zone.innerHTML = '<div class="te-upload-icon">' + (uploadCfg.icon || "\ud83d\udcf7") + '</div>' +
-        '<div class="te-upload-label">' + (uploadCfg.title || "Upload Reference Images") + '</div>' +
-        '<div class="te-upload-sub">' + (uploadCfg.subtitle || "Up to " + maxFiles + " images (reference photos, placement ideas)") + '</div>';
+      /* Section title */
+      body.appendChild(el("div", "te-section-title", uploadCfg.title || "Upload Reference Images"));
+      body.appendChild(el("div", "te-section-sub", uploadCfg.subtitle || "Tap to add photos \u2014 describe each one so your artist knows what they\u2019re looking at."));
 
-      zone.appendChild(input);
+      /* Card container */
+      var cardsWrap = el("div", "te-upload-cards");
 
-      /* Click zone to trigger file picker */
-      zone.addEventListener("click", function (e) {
-        if (e.target !== input) input.click();
-      });
-
-      /* Preview thumbnails */
-      var previewWrap = el("div", "te-upload-previews");
-
-      function renderPreviews() {
-        previewWrap.innerHTML = "";
+      function renderCards() {
+        cardsWrap.innerHTML = "";
         STATE.uploads.forEach(function (fileData, idx) {
-          var thumbWrap = el("div", "te-upload-thumb-wrap");
+          var card = el("div", "te-upload-card");
+
+          /* Thumbnail */
           var img = el("img", "te-upload-thumb");
           img.src = fileData.dataUrl;
           img.alt = "Reference " + (idx + 1);
-          thumbWrap.appendChild(img);
+          card.appendChild(img);
+
+          /* Body: type selector + caption */
+          var cardBody = el("div", "te-upload-card-body");
+
+          /* Type/category dropdown */
+          var typeSelect = document.createElement("select");
+          typeSelect.className = "te-upload-type-select";
+          categories.forEach(function (cat) {
+            var opt = document.createElement("option");
+            opt.value = cat;
+            opt.textContent = cat;
+            if (fileData.category === cat) opt.selected = true;
+            typeSelect.appendChild(opt);
+          });
+          if (!fileData.category) fileData.category = categories[0];
+          typeSelect.addEventListener("change", function () {
+            STATE.uploads[idx].category = typeSelect.value;
+          });
+          typeSelect.addEventListener("click", function (e) { e.stopPropagation(); });
+          cardBody.appendChild(typeSelect);
+
+          /* Caption textarea */
+          var caption = document.createElement("textarea");
+          caption.className = "te-upload-caption";
+          caption.rows = 2;
+          caption.placeholder = "Describe this image\u2026 e.g. \u201cI want the wings like this but smaller\u201d";
+          caption.value = fileData.caption || "";
+          caption.addEventListener("input", function () {
+            STATE.uploads[idx].caption = caption.value;
+          });
+          caption.addEventListener("click", function (e) { e.stopPropagation(); });
+          cardBody.appendChild(caption);
+
+          card.appendChild(cardBody);
+
+          /* Remove button */
           var removeBtn = el("button", "te-upload-remove", "\u00d7");
           removeBtn.addEventListener("click", function (e) {
             e.stopPropagation();
             STATE.uploads.splice(idx, 1);
-            renderPreviews();
-            zone.classList.toggle("te-has-files", STATE.uploads.length > 0);
+            renderCards();
           });
-          thumbWrap.appendChild(removeBtn);
-          previewWrap.appendChild(thumbWrap);
+          card.appendChild(removeBtn);
+
+          cardsWrap.appendChild(card);
         });
       }
 
+      body.appendChild(cardsWrap);
+
+      /* Add more / initial upload button */
+      var addBtn = el("button", "te-upload-add-more");
+      function updateAddBtn() {
+        if (STATE.uploads.length >= maxFiles) {
+          addBtn.style.display = "none";
+        } else if (STATE.uploads.length === 0) {
+          addBtn.textContent = "\ud83d\udcf7 Tap to upload reference photos";
+          addBtn.style.display = "block";
+        } else {
+          addBtn.textContent = "+ Add another image (" + STATE.uploads.length + "/" + maxFiles + ")";
+          addBtn.style.display = "block";
+        }
+      }
+      addBtn.addEventListener("click", function () { input.click(); });
+      updateAddBtn();
+      body.appendChild(addBtn);
+
+      /* Handle file selection */
       input.addEventListener("change", function () {
         var files = Array.prototype.slice.call(input.files);
         files.forEach(function (file) {
           if (STATE.uploads.length >= maxFiles) return;
           var reader = new FileReader();
           reader.onload = function (e) {
-            STATE.uploads.push({ name: file.name, dataUrl: e.target.result });
-            renderPreviews();
-            zone.classList.add("te-has-files");
+            STATE.uploads.push({
+              name: file.name,
+              dataUrl: e.target.result,
+              category: categories[0],
+              caption: ""
+            });
+            renderCards();
+            updateAddBtn();
           };
           reader.readAsDataURL(file);
         });
         input.value = "";
       });
 
-      renderPreviews();
-      zone.appendChild(previewWrap);
-      body.appendChild(zone);
+      renderCards();
     }
 
     /* ── Navigation Buttons ── */
@@ -646,12 +718,14 @@
           rowEl.appendChild(el("span", "", getSummaryLabel(group)));
           summaryBox.appendChild(rowEl);
         });
-        /* Show upload count if any */
+        /* Show upload details */
         if (STATE.uploads.length > 0) {
-          var uploadRow = el("div", "te-factor-row");
-          uploadRow.appendChild(el("span", "", "Reference Images"));
-          uploadRow.appendChild(el("span", "", STATE.uploads.length + " uploaded"));
-          summaryBox.appendChild(uploadRow);
+          STATE.uploads.forEach(function (u, idx) {
+            var uploadRow = el("div", "te-factor-row");
+            uploadRow.appendChild(el("span", "", (u.category || "Image") + " #" + (idx + 1)));
+            uploadRow.appendChild(el("span", "", u.caption ? "\u201c" + (u.caption.length > 30 ? u.caption.substring(0, 28) + "\u2026" : u.caption) + "\u201d" : "No description"));
+            summaryBox.appendChild(uploadRow);
+          });
         }
         body.appendChild(summaryBox);
       }
@@ -858,12 +932,29 @@
         body.appendChild(refReminder);
       }
 
-      /* Upload summary on results */
+      /* Upload summary on results — show each image with its category + caption */
       if (STATE.uploads.length > 0) {
-        var uploadSummary = el("div", "te-ref-reminder");
-        uploadSummary.innerHTML = '<div class="te-ref-reminder-icon">\ud83d\uddbc\ufe0f</div>' +
-          '<div class="te-ref-reminder-text"><strong>' + STATE.uploads.length + ' reference image' + (STATE.uploads.length > 1 ? 's' : '') + ' ready.</strong> Bring ' + (STATE.uploads.length > 1 ? 'these' : 'this') + ' to your consultation for your artist to review.</div>';
-        body.appendChild(uploadSummary);
+        var uploadSection = el("div", "te-factors");
+        uploadSection.appendChild(el("h4", "", "Your Reference Images (" + STATE.uploads.length + ")"));
+        STATE.uploads.forEach(function (u, idx) {
+          var rowEl = el("div", "te-factor-row");
+          rowEl.style.flexDirection = "column";
+          rowEl.style.gap = "2px";
+          var topLine = el("span", "", "");
+          topLine.style.color = "#fff";
+          topLine.style.fontWeight = "600";
+          topLine.textContent = (u.category || "Reference") + " #" + (idx + 1);
+          rowEl.appendChild(topLine);
+          if (u.caption) {
+            var capLine = el("span", "", "");
+            capLine.style.color = "#94a3b8";
+            capLine.style.fontStyle = "italic";
+            capLine.textContent = "\u201c" + u.caption + "\u201d";
+            rowEl.appendChild(capLine);
+          }
+          uploadSection.appendChild(rowEl);
+        });
+        body.appendChild(uploadSection);
       }
 
       /* Custom disclaimer */
