@@ -1,13 +1,62 @@
 # Shop Estimator
 
-Free, embeddable pricing estimator widget for small businesses. Config-driven. Zero dependencies. Works on any website.
+Free pricing widget for tattoo shops, salons, and small businesses. Your customers estimate their own price right on your website. You stop answering "how much?" in your DMs.
 
-## Quick Start
+**[Try the live demo + get your code](https://yarmoluk.github.io/shop-estimator/go.html)**
 
-Paste this on any webpage to add a tattoo pricing estimator:
+---
+
+## Install in 60 Seconds
+
+1. Go to **[yarmoluk.github.io/shop-estimator/go.html](https://yarmoluk.github.io/shop-estimator/go.html)**
+2. Fill in your shop name, rates, and artists
+3. Click **Copy Code**
+4. Paste it on your website (WordPress, Squarespace, Wix, Shopify — anything)
+
+That's it. Your customers can now estimate their price and book a consultation.
+
+---
+
+## What You Can Customize
+
+Everything is editable. No code experience needed — just fill in the form on the install page.
+
+| Setting | What it does |
+|---------|-------------|
+| **Shop Name** | Shows in the widget header |
+| **Minimum Price** | Price floor — estimates won't go below this |
+| **Hourly Rate** | Default rate used for calculations |
+| **Brand Color** | Matches your shop's look |
+| **Booking Link** | "Get Your Exact Quote" button goes here |
+| **Business Type** | Tattoo, Hair Salon, Nail Salon, or Auto Detail |
+
+### Adding Your Artists
+
+Add as many artists as you want (up to 15). Each artist gets their own card with:
+
+- **Name** — displayed to customers
+- **Tier** — Junior, Senior, Master, Owner, Guest
+- **Rate** — hourly rate, or flat/day rate for premium artists
+- **Bio** — short description (specialties, years of experience)
+- **Styles** — comma-separated list (shows as tags on the card)
+
+When customers use the widget, they pick their artist first. The estimate adjusts to that artist's rate automatically.
+
+**Hourly artists:**
+> Sarah — Senior — $150/hr — "Bold color specialist, 8 years"
+
+**Flat-rate artists:**
+> Nick — Owner — $950/session or $1500/full day — "Books 3+ months out"
+
+If you don't add any artists, the widget skips that step and uses your default hourly rate. Both ways work.
+
+---
+
+## How It Works (For Developers)
+
+### Embed Code
 
 ```html
-<!-- Tattoo Price Estimator Widget -->
 <script src="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js"
   data-config="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/tattoo.json"
   data-shop="Your Shop Name"
@@ -17,125 +66,100 @@ Paste this on any webpage to add a tattoo pricing estimator:
   data-booking="https://your-booking-link.com"></script>
 ```
 
-## Available Verticals
+### Data Attributes
 
-| Vertical | Config URL | Default Accent |
-|----------|-----------|----------------|
-| Tattoo | `configs/tattoo.json` | `#e94560` |
+| Attribute | Description | Default |
+|-----------|-------------|---------|
+| `data-config` | URL to a JSON config file | `configs/tattoo.json` |
+| `data-config-inline` | JSON string merged on top of the config (for artists, overrides) | — |
+| `data-shop` | Business name | From config |
+| `data-minimum` | Price floor | From config |
+| `data-hourly` | Hourly rate | From config |
+| `data-accent` | Brand color (hex) | From config |
+| `data-booking` | Booking URL | Hidden if empty |
+
+### Available Configs
+
+| Business | Config | Accent |
+|----------|--------|--------|
+| Tattoo Shop | `configs/tattoo.json` | `#e94560` |
 | Hair Salon | `configs/hair-salon.json` | `#d4a574` |
-| Nail Salon | `configs/nail-salon.json` | *(see config)* |
-| Auto Detail | `configs/auto-detail.json` | *(see config)* |
+| Nail Salon | `configs/nail-salon.json` | `#e8a0bf` |
+| Auto Detail | `configs/auto-detail.json` | `#4a90d9` |
 
-To use a different vertical, just change the `data-config` URL:
+### Config Schema
 
-```html
-<script src="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js"
-  data-config="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/hair-salon.json"
-  data-shop="Luxe Hair Studio"
-  data-minimum="40"
-  data-hourly="75"></script>
-```
+Configs are JSON files that define the steps, options, and pricing logic. You can create one for any service business.
 
-## Create a Custom Vertical
+**Group types:**
 
-Create a JSON config file with this structure:
+| Type | What it does |
+|------|-------------|
+| `select` | Pick one option (size, placement, color) |
+| `multiselect` | Pick multiple options (styles — select all that apply) |
+| `toggle` | On/off switch (cover-up, custom design) |
+| `artist` | Artist picker with per-artist rates |
+
+**Pricing math:**
+- First `select` group with `hours` on its options = base time estimate
+- All other groups use `mult` (multiplier) to adjust price
+- Final price = `base_hours × hourly_rate × all_multipliers`, shown as a range
+- Artists with `rateType: "flat"` use session/day pricing instead of hourly
+
+**Adding artists to a config (top-level array):**
 
 ```json
 {
-  "vertical": "your-vertical",
-  "title": "Price Estimator",
-  "currency": "$",
-  "defaults": {
-    "shop": "Your Business Name",
-    "minimum": 50,
-    "hourly": 100,
-    "accent": "#e94560",
-    "booking": ""
-  },
-  "steps": [
+  "artists": [
     {
-      "title": "Step Name",
-      "groups": [
-        {
-          "key": "unique_key",
-          "title": "Question for the customer?",
-          "subtitle": "Helper text",
-          "type": "select",
-          "layout": "half",
-          "options": [
-            { "label": "Option A", "desc": "Description", "hours": 1.0 },
-            { "label": "Option B", "desc": "Description", "hours": 2.0 }
-          ]
-        },
-        {
-          "key": "modifier_key",
-          "title": "Another question?",
-          "type": "select",
-          "layout": "third",
-          "options": [
-            { "label": "Standard", "mult": 1.0 },
-            { "label": "Premium", "mult": 1.3 }
-          ]
-        },
-        {
-          "key": "toggle_key",
-          "title": "Optional add-on?",
-          "type": "toggle",
-          "mult_on": 1.2,
-          "mult_off": 1.0,
-          "default": false
-        }
-      ]
+      "name": "Sarah",
+      "tier": "Senior",
+      "hourly": 150,
+      "rateType": "hourly",
+      "bio": "Bold color specialist",
+      "styles": ["Traditional", "Neo-Trad", "Color"]
+    },
+    {
+      "name": "Nick",
+      "tier": "Owner",
+      "rateType": "flat",
+      "rates": [
+        { "label": "Session", "price": 950, "maxHours": 6 },
+        { "label": "Full Day", "price": 1500 }
+      ],
+      "bio": "Premium large-scale work",
+      "styles": ["Japanese", "Realism"]
     }
   ],
-  "products": [
-    {
-      "name": "Product Name",
-      "url": "https://example.com",
-      "price": "$19.99",
-      "desc": "Short description"
-    }
-  ],
-  "productsTitle": "Recommended Products",
-  "disclaimer": "Disclaimer text here."
+  "steps": [ ... ]
 }
 ```
 
-**Key rules:**
-- The first `select` group with `hours` on its options sets the base time estimate.
-- All other `select` groups use `mult` (multiplier) to adjust the price up or down.
-- `toggle` groups use `mult_on` / `mult_off` for their multiplier.
-- Final price = `base_hours * hourly_rate * product_of_all_multipliers`, shown as a +/- 25% range.
+When `artists` is present, the engine auto-creates an "Choose Your Artist" step. No artists = step is skipped.
 
-Host your custom config anywhere and point `data-config` to it.
+### Features
 
-## CDN URLs (jsDelivr)
+- Zero dependencies, self-contained IIFE
+- All CSS scoped with `.te-` prefix (no host site collisions)
+- Mobile-first responsive design
+- Multi-step form with progress dots
+- Multi-session auto-detection (flags large jobs)
+- Image upload for reference photos (client-side only)
+- Custom disclaimer support
+- Aftercare product recommendations (affiliate links)
+- "Powered by Shop Estimator" watermark
+
+### CDN URLs
 
 | File | URL |
 |------|-----|
-| Engine (main) | `https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js` |
-| Widget (tattoo compat) | `https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/widget.js` |
+| Engine | `https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js` |
 | Tattoo config | `https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/tattoo.json` |
 | Hair Salon config | `https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/hair-salon.json` |
 | Nail Salon config | `https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/nail-salon.json` |
 | Auto Detail config | `https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/auto-detail.json` |
 
-## Data Attributes
-
-| Attribute | Description | Default |
-|-----------|-------------|---------|
-| `data-config` | URL to a JSON config file | Falls back to `configs/tattoo.json` |
-| `data-shop` | Business name shown in header | From config |
-| `data-minimum` | Minimum price floor | From config |
-| `data-hourly` | Hourly rate for estimates | From config |
-| `data-accent` | Brand color (hex) | From config |
-| `data-booking` | Booking/consultation URL | Hidden if empty |
-
-## Backward Compatibility
-
-`widget.js` is a backward-compatible wrapper for the original tattoo-only embed API. It loads `engine.js` with `configs/tattoo.json` automatically. Existing embeds using `widget.js` will continue to work with no changes.
-
-For new installs, use `engine.js` directly with a `data-config` attribute to pick any vertical.
+---
 
 ## License
 

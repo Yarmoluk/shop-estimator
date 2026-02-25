@@ -31,26 +31,53 @@
   function resolveConfig(callback) {
     var inlineAttr = scriptEl.getAttribute("data-config-inline");
     var configUrl = scriptEl.getAttribute("data-config");
+    var inlineOverlay = null;
 
-    /* Priority 1: Inline JSON attribute */
+    /* Parse inline overlay (merges ON TOP of fetched config) */
     if (inlineAttr) {
       try {
-        var parsed = JSON.parse(inlineAttr);
-        callback(applyOverrides(parsed));
+        inlineOverlay = JSON.parse(inlineAttr);
       } catch (e) {
         console.error("[Estimator Engine] Invalid inline config JSON:", e);
-        callback(null);
       }
+    }
+
+    /* If we have inline AND a config URL, fetch the base then merge inline on top */
+    if (inlineOverlay && configUrl) {
+      fetch(configUrl)
+        .then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json();
+        })
+        .then(function (json) {
+          var merged = deepMerge(json, inlineOverlay);
+          /* Arrays (like artists) don't deep-merge well — overlay replaces */
+          if (inlineOverlay.artists) merged.artists = inlineOverlay.artists;
+          if (inlineOverlay.products) merged.products = inlineOverlay.products;
+          if (inlineOverlay.steps) merged.steps = inlineOverlay.steps;
+          callback(applyOverrides(merged));
+        })
+        .catch(function (err) {
+          console.error("[Estimator Engine] Failed to load config from " + configUrl + ":", err);
+          /* Fall back to inline-only */
+          callback(applyOverrides(inlineOverlay));
+        });
       return;
     }
 
-    /* Priority 2: Global variable */
+    /* Inline-only (no config URL — full standalone config) */
+    if (inlineOverlay && !configUrl) {
+      callback(applyOverrides(inlineOverlay));
+      return;
+    }
+
+    /* Global variable */
     if (window.ESTIMATOR_CONFIG) {
       callback(applyOverrides(window.ESTIMATOR_CONFIG));
       return;
     }
 
-    /* Priority 3: Fetch from URL (data-config attr, or default tattoo.json) */
+    /* Fetch from URL (data-config attr, or default tattoo.json) */
     var url = configUrl || resolveRelativeUrl("configs/tattoo.json");
     fetch(url)
       .then(function (res) {

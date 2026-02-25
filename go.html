@@ -124,6 +124,39 @@
   .share-row{display:flex;justify-content:center;gap:.75rem;margin-top:1rem}
   .share-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;background:#16213e;border-radius:8px;color:#94a3b8;font-size:.8rem;font-weight:600;text-decoration:none;transition:background .2s}
   .share-btn:hover{background:#1e2a45;color:#fff}
+
+  /* ── CONFIGURATOR ── */
+  .cfg-wrap{max-width:440px;margin:0 auto}
+  .cfg-section{margin-bottom:1rem}
+  .cfg-label{font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.4rem}
+  .cfg-label .cfg-optional{font-weight:400;color:#555;font-size:.7rem}
+  .cfg-hint{font-size:.72rem;color:#666;margin-bottom:.75rem;line-height:1.5}
+  .cfg-input{display:block;width:100%;padding:.7rem .85rem;background:#12121e;border:1px solid #2a2a3a;border-radius:8px;color:#e0e0e0;font-size:.85rem;font-family:inherit;outline:none;transition:border-color .2s}
+  .cfg-input:focus{border-color:#e94560}
+  .cfg-input::placeholder{color:#444}
+  select.cfg-input{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;padding-right:2rem}
+  .cfg-row{display:flex;gap:.75rem}
+  .cfg-half{flex:1}
+  .cfg-color-row{display:flex;align-items:center;gap:.75rem}
+  .cfg-color{width:44px;height:44px;border:2px solid #2a2a3a;border-radius:8px;cursor:pointer;padding:0;background:none}
+  .cfg-color::-webkit-color-swatch-wrapper{padding:2px}
+  .cfg-color::-webkit-color-swatch{border-radius:4px;border:none}
+  .cfg-color-hex{font-size:.8rem;color:#888;font-family:'SF Mono',Monaco,'Courier New',monospace}
+
+  /* Artist cards */
+  .cfg-artist{background:#12121e;border:1px solid #1e1e2e;border-radius:10px;padding:.85rem;margin-bottom:.6rem;position:relative}
+  .cfg-artist-header{display:flex;gap:.5rem;margin-bottom:.5rem}
+  .cfg-artist-header input{flex:1}
+  .cfg-artist-row{display:flex;gap:.5rem;margin-bottom:.5rem}
+  .cfg-artist-row .cfg-input{font-size:.78rem;padding:.5rem .65rem}
+  .cfg-artist-row select.cfg-input{font-size:.78rem;padding:.5rem .65rem}
+  .cfg-artist-remove{position:absolute;top:.6rem;right:.6rem;width:22px;height:22px;border-radius:50%;background:#e94560;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
+  .cfg-artist-remove:hover{background:#c62a40}
+  .cfg-artist-styles{font-size:.72rem;color:#666;margin-top:.3rem}
+  .cfg-artist-styles input{width:100%;background:#0a0a12;border:1px solid #1e1e2e;border-radius:6px;padding:.4rem .6rem;color:#94a3b8;font-size:.72rem;font-family:inherit;outline:none}
+  .cfg-artist-styles input:focus{border-color:#e94560}
+  .cfg-add-btn{display:block;width:100%;padding:.65rem;background:transparent;border:2px dashed #2a2a3a;border-radius:10px;color:#e94560;font-size:.82rem;font-weight:700;cursor:pointer;transition:border-color .2s,background .2s;font-family:inherit}
+  .cfg-add-btn:hover{border-color:#e94560;background:rgba(233,69,96,.05)}
 </style>
 </head>
 <body>
@@ -255,26 +288,69 @@
   </div>
 </section>
 
-<!-- ═══ INSTALL CODE ═══ -->
+<!-- ═══ CONFIGURATOR ═══ -->
 <section class="install" id="install">
-  <h2>The Embed Code</h2>
-  <p class="sub">Copy this. Paste it anywhere on your website. That's the whole install.</p>
-  <div class="code-wrap">
-    <div class="code-block"><span class="t">&lt;script</span> <span class="a">src=</span><span class="v">"https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js"</span>
-  <span class="a">data-config=</span><span class="v">"https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/tattoo.json"</span>
-  <span class="a">data-shop=</span><span class="v">"Your Shop Name"</span>
-  <span class="a">data-minimum=</span><span class="v">"100"</span>
-  <span class="a">data-hourly=</span><span class="v">"150"</span>
-  <span class="a">data-accent=</span><span class="v">"#e94560"</span>
-  <span class="a">data-booking=</span><span class="v">"https://your-booking-link.com"</span><span class="t">&gt;&lt;/script&gt;</span></div>
-    <button class="copy-btn" id="copyBtn" onclick="copyCode()">Copy Code To Clipboard</button>
+  <h2>Build Your Widget</h2>
+  <p class="sub">Fill this out. Your embed code generates automatically.</p>
+
+  <div class="cfg-wrap">
+    <!-- SHOP INFO -->
+    <div class="cfg-section">
+      <div class="cfg-label">Shop Name</div>
+      <input type="text" id="cfgShop" class="cfg-input" placeholder="Iron & Ink Tattoo" oninput="updateCode()">
+    </div>
+    <div class="cfg-row">
+      <div class="cfg-section cfg-half">
+        <div class="cfg-label">Minimum Price ($)</div>
+        <input type="number" id="cfgMin" class="cfg-input" value="100" oninput="updateCode()">
+      </div>
+      <div class="cfg-section cfg-half">
+        <div class="cfg-label">Default Hourly Rate ($)</div>
+        <input type="number" id="cfgHourly" class="cfg-input" value="150" oninput="updateCode()">
+      </div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Booking Link</div>
+      <input type="url" id="cfgBooking" class="cfg-input" placeholder="https://your-booking-page.com" oninput="updateCode()">
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Brand Color</div>
+      <div class="cfg-color-row">
+        <input type="color" id="cfgColor" class="cfg-color" value="#e94560" oninput="updateCode()">
+        <span class="cfg-color-hex" id="cfgColorHex">#e94560</span>
+      </div>
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Business Type</div>
+      <select id="cfgVertical" class="cfg-input" onchange="updateCode()">
+        <option value="tattoo">Tattoo Shop</option>
+        <option value="hair-salon">Hair Salon</option>
+        <option value="nail-salon">Nail Salon</option>
+        <option value="auto-detail">Auto Detail</option>
+      </select>
+    </div>
+
+    <!-- ARTISTS -->
+    <div class="cfg-section">
+      <div class="cfg-label">Your Artists <span class="cfg-optional">optional &mdash; up to 15</span></div>
+      <p class="cfg-hint">Add your artists and customers pick who they want during the estimate. Each artist can have their own rate.</p>
+      <div id="artistList"></div>
+      <button class="cfg-add-btn" id="addArtistBtn" onclick="addArtist()">+ Add Artist</button>
+    </div>
+
+    <!-- GENERATED CODE -->
+    <div class="cfg-section" style="margin-top:1.5rem">
+      <div class="cfg-label">Your Embed Code</div>
+      <div class="code-block" id="codeOutput"></div>
+      <button class="copy-btn" id="copyBtn" onclick="copyCode()">Copy Code To Clipboard</button>
+    </div>
   </div>
 </section>
 
 <!-- ═══ PLATFORM GUIDES ═══ -->
 <section class="how" style="background:#0d0d14">
   <h2>Where To Paste It</h2>
-  <p class="sub">Pick your platform — takes 30 seconds.</p>
+  <p class="sub">Pick your platform &mdash; takes 30 seconds.</p>
   <div class="steps">
     <div class="step">
       <div class="step-num" style="background:linear-gradient(135deg,#21759b,#1a5f7a);font-size:.6rem">WP</div>
@@ -324,14 +400,174 @@
 </footer>
 
 <script>
+var MAX_ARTISTS = 15;
+var artists = [];
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function addArtist() {
+  if (artists.length >= MAX_ARTISTS) return;
+  artists.push({ name:'', tier:'Senior', hourly:'150', rateType:'hourly', bio:'', styles:'' });
+  renderArtists();
+  updateCode();
+}
+
+function removeArtist(i) {
+  artists.splice(i, 1);
+  renderArtists();
+  updateCode();
+}
+
+function renderArtists() {
+  var list = document.getElementById('artistList');
+  var btn = document.getElementById('addArtistBtn');
+  list.innerHTML = '';
+  artists.forEach(function(a, i) {
+    var card = document.createElement('div');
+    card.className = 'cfg-artist';
+    card.innerHTML =
+      '<button class="cfg-artist-remove" onclick="removeArtist('+i+')">&times;</button>' +
+      '<div class="cfg-artist-header">' +
+        '<input class="cfg-input" placeholder="Artist name" value="'+esc(a.name)+'" oninput="artists['+i+'].name=this.value;updateCode()">' +
+      '</div>' +
+      '<div class="cfg-artist-row">' +
+        '<select class="cfg-input" onchange="artists['+i+'].tier=this.value;updateCode()">' +
+          '<option value="Junior"'+(a.tier==='Junior'?' selected':'')+'>Junior</option>' +
+          '<option value="Senior"'+(a.tier==='Senior'?' selected':'')+'>Senior</option>' +
+          '<option value="Master"'+(a.tier==='Master'?' selected':'')+'>Master</option>' +
+          '<option value="Owner"'+(a.tier==='Owner'?' selected':'')+'>Owner</option>' +
+          '<option value="Guest"'+(a.tier==='Guest'?' selected':'')+'>Guest</option>' +
+        '</select>' +
+        '<select class="cfg-input" onchange="artists['+i+'].rateType=this.value;updateCode();renderArtists()">' +
+          '<option value="hourly"'+(a.rateType==='hourly'?' selected':'')+'>Hourly rate</option>' +
+          '<option value="flat"'+(a.rateType==='flat'?' selected':'')+'>Flat / day rate</option>' +
+        '</select>' +
+      '</div>' +
+      (a.rateType === 'hourly' ?
+        '<div class="cfg-artist-row">' +
+          '<input class="cfg-input" type="number" placeholder="$/hr" value="'+esc(a.hourly)+'" oninput="artists['+i+'].hourly=this.value;updateCode()" style="max-width:120px">' +
+          '<input class="cfg-input" placeholder="Short bio (optional)" value="'+esc(a.bio)+'" oninput="artists['+i+'].bio=this.value;updateCode()">' +
+        '</div>'
+      :
+        '<div class="cfg-artist-row">' +
+          '<input class="cfg-input" placeholder="Session price" value="'+esc(a.flatSession||'')+'" oninput="artists['+i+'].flatSession=this.value;updateCode()" style="max-width:120px">' +
+          '<input class="cfg-input" placeholder="Day price (optional)" value="'+esc(a.flatDay||'')+'" oninput="artists['+i+'].flatDay=this.value;updateCode()" style="max-width:120px">' +
+        '</div>' +
+        '<div class="cfg-artist-row">' +
+          '<input class="cfg-input" placeholder="Short bio (optional)" value="'+esc(a.bio)+'" oninput="artists['+i+'].bio=this.value;updateCode()">' +
+        '</div>'
+      ) +
+      '<div class="cfg-artist-styles">' +
+        '<input placeholder="Styles: Traditional, Realism, Fine Line..." value="'+esc(a.styles)+'" oninput="artists['+i+'].styles=this.value;updateCode()">' +
+      '</div>';
+    list.appendChild(card);
+  });
+  btn.style.display = artists.length >= MAX_ARTISTS ? 'none' : 'block';
+}
+
+function buildArtistsJSON() {
+  if (artists.length === 0) return null;
+  var arr = [];
+  artists.forEach(function(a) {
+    if (!a.name.trim()) return;
+    var obj = { name: a.name.trim(), tier: a.tier };
+    if (a.rateType === 'flat') {
+      obj.rateType = 'flat';
+      obj.rates = [];
+      if (a.flatSession) obj.rates.push({ label: 'Session', price: parseInt(a.flatSession) || 0, maxHours: 6 });
+      if (a.flatDay) obj.rates.push({ label: 'Full Day', price: parseInt(a.flatDay) || 0 });
+      if (obj.rates.length === 0) obj.rates.push({ label: 'Session', price: 500, maxHours: 6 });
+    } else {
+      obj.rateType = 'hourly';
+      obj.hourly = parseInt(a.hourly) || 150;
+    }
+    if (a.bio.trim()) obj.bio = a.bio.trim();
+    if (a.styles.trim()) obj.styles = a.styles.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+    arr.push(obj);
+  });
+  return arr.length > 0 ? arr : null;
+}
+
+function updateCode() {
+  var shop = document.getElementById('cfgShop').value || 'Your Shop Name';
+  var min = document.getElementById('cfgMin').value || '100';
+  var hourly = document.getElementById('cfgHourly').value || '150';
+  var accent = document.getElementById('cfgColor').value || '#e94560';
+  var booking = document.getElementById('cfgBooking').value || '';
+  var vertical = document.getElementById('cfgVertical').value;
+
+  document.getElementById('cfgColorHex').textContent = accent;
+
+  var configUrl = 'https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/' + vertical + '.json';
+
+  var artistsJSON = buildArtistsJSON();
+  var useInline = !!artistsJSON;
+
+  var code, display;
+
+  if (useInline) {
+    /* Build a full inline config with artists merged in */
+    var inlineCfg = {
+      artists: artistsJSON
+    };
+    var jsonStr = JSON.stringify(inlineCfg);
+    /* Escape for HTML attribute */
+    var escaped = jsonStr.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+
+    code = '<!-- Pricing Estimator Widget -->\n<script src="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js"\n' +
+      '  data-config="' + configUrl + '"\n' +
+      '  data-config-inline=\'' + jsonStr + '\'\n' +
+      '  data-shop="' + shop + '"\n' +
+      '  data-minimum="' + min + '"\n' +
+      '  data-hourly="' + hourly + '"\n' +
+      '  data-accent="' + accent + '"' +
+      (booking ? '\n  data-booking="' + booking + '"' : '') +
+      '><\/script>';
+
+    display = '<span class="t">&lt;script</span> <span class="a">src=</span><span class="v">"...engine.js"</span>\n' +
+      '  <span class="a">data-config=</span><span class="v">"...' + vertical + '.json"</span>\n' +
+      '  <span class="a">data-config-inline=</span><span class="v">\'{ artists: [' + artistsJSON.length + '] }\'</span>\n' +
+      '  <span class="a">data-shop=</span><span class="v">"' + esc(shop) + '"</span>\n' +
+      '  <span class="a">data-minimum=</span><span class="v">"' + esc(min) + '"</span>\n' +
+      '  <span class="a">data-hourly=</span><span class="v">"' + esc(hourly) + '"</span>\n' +
+      '  <span class="a">data-accent=</span><span class="v">"' + esc(accent) + '"</span>' +
+      (booking ? '\n  <span class="a">data-booking=</span><span class="v">"' + esc(booking) + '"</span>' : '') +
+      '<span class="t">&gt;&lt;/script&gt;</span>';
+  } else {
+    code = '<!-- Pricing Estimator Widget -->\n<script src="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js"\n' +
+      '  data-config="' + configUrl + '"\n' +
+      '  data-shop="' + shop + '"\n' +
+      '  data-minimum="' + min + '"\n' +
+      '  data-hourly="' + hourly + '"\n' +
+      '  data-accent="' + accent + '"' +
+      (booking ? '\n  data-booking="' + booking + '"' : '') +
+      '><\/script>';
+
+    display = '<span class="t">&lt;script</span> <span class="a">src=</span><span class="v">"...engine.js"</span>\n' +
+      '  <span class="a">data-config=</span><span class="v">"...' + vertical + '.json"</span>\n' +
+      '  <span class="a">data-shop=</span><span class="v">"' + esc(shop) + '"</span>\n' +
+      '  <span class="a">data-minimum=</span><span class="v">"' + esc(min) + '"</span>\n' +
+      '  <span class="a">data-hourly=</span><span class="v">"' + esc(hourly) + '"</span>\n' +
+      '  <span class="a">data-accent=</span><span class="v">"' + esc(accent) + '"</span>' +
+      (booking ? '\n  <span class="a">data-booking=</span><span class="v">"' + esc(booking) + '"</span>' : '') +
+      '<span class="t">&gt;&lt;/script&gt;</span>';
+  }
+
+  document.getElementById('codeOutput').innerHTML = display;
+  window._generatedCode = code;
+}
+
 function copyCode(){
-  var code='<!-- Pricing Estimator Widget -->\n<script src="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/engine.js"\n  data-config="https://cdn.jsdelivr.net/gh/Yarmoluk/shop-estimator@latest/configs/tattoo.json"\n  data-shop="Your Shop Name"\n  data-minimum="100"\n  data-hourly="150"\n  data-accent="#e94560"\n  data-booking="https://your-booking-link.com"><\/script>';
+  var code = window._generatedCode || '';
   navigator.clipboard.writeText(code).then(function(){
     var b=document.getElementById('copyBtn');
     b.textContent='Copied!';b.classList.add('copied');
     setTimeout(function(){b.textContent='Copy Code To Clipboard';b.classList.remove('copied')},2500);
   });
 }
+
+/* Init on load */
+updateCode();
 </script>
 
 </body>
