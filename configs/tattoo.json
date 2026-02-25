@@ -7,8 +7,29 @@
     "minimum": 80,
     "hourly": 150,
     "accent": "#e94560",
-    "booking": ""
+    "booking": "",
+    "maxSession": 4
   },
+
+  "artists": [
+    {
+      "name": "Artist 1",
+      "tier": "Senior",
+      "hourly": 150,
+      "rateType": "hourly",
+      "bio": "Versatile artist. Edit this in your config JSON.",
+      "styles": ["Traditional", "Illustrative"]
+    },
+    {
+      "name": "Artist 2",
+      "tier": "Junior",
+      "hourly": 100,
+      "rateType": "hourly",
+      "bio": "Apprentice artist, great for smaller pieces.",
+      "styles": ["Fine Line", "Minimalist"]
+    }
+  ],
+
   "steps": [
     {
       "title": "Size & Placement",
@@ -16,52 +37,68 @@
         {
           "key": "size",
           "title": "How big is the tattoo?",
-          "subtitle": "Pick the closest size reference",
+          "subtitle": "Approximate size in inches",
           "type": "select",
           "layout": "half",
           "options": [
-            { "label": "Coin", "desc": "Quarter-sized \u2014 finger, behind ear", "hours": 0.5 },
-            { "label": "Palm", "desc": "Credit card \u2014 wrist, ankle", "hours": 1.5 },
-            { "label": "Hand", "desc": "Your hand \u2014 forearm, shoulder", "hours": 3 },
-            { "label": "Half Sleeve", "desc": "Shoulder to elbow or elbow to wrist", "hours": 8 },
-            { "label": "Full Sleeve", "desc": "Full arm, full leg", "hours": 16 },
-            { "label": "Back Piece", "desc": "Half back or full back", "hours": 24 }
+            { "label": "Small (1\u20133\")", "desc": "Finger, behind ear, wrist \u2014 simple icons, words", "hours": 0.75 },
+            { "label": "Medium (3\u20137\")", "desc": "Forearm, ankle, shoulder \u2014 most popular size", "hours": 2.5 },
+            { "label": "Large (8\"+)", "desc": "Upper arm, thigh, ribs \u2014 detailed pieces", "hours": 5 },
+            { "label": "XL \u2014 Half Sleeve", "desc": "Shoulder to elbow or elbow to wrist", "hours": 10 },
+            { "label": "XL \u2014 Full Sleeve", "desc": "Full arm wrap, full leg", "hours": 18 },
+            { "label": "XL \u2014 Back Piece", "desc": "Half back or full back", "hours": 25 }
           ]
         },
         {
           "key": "placement",
           "title": "Where on the body?",
-          "subtitle": "Premium areas take more skill and time",
+          "subtitle": "Some areas are more difficult and time-intensive",
           "type": "select",
           "layout": "full",
           "options": [
-            { "label": "Forearm / Upper Arm / Calf / Back / Chest", "desc": "Standard placement", "mult": 1.0 },
-            { "label": "Ribs / Stomach / Foot / Hand / Neck", "desc": "Moderate difficulty", "mult": 1.2, "premium": true },
-            { "label": "Fingers / Face / Throat / Elbow / Knee", "desc": "Difficult placement", "mult": 1.4, "premium": true }
+            { "label": "Arm (upper/forearm)", "desc": "Standard \u2014 easy access, smooth canvas", "mult": 1.0 },
+            { "label": "Leg (thigh/calf/shin)", "desc": "Standard \u2014 large flat area", "mult": 1.0 },
+            { "label": "Back / Chest", "desc": "Large canvas, standard difficulty", "mult": 1.0 },
+            { "label": "Torso / Stomach", "desc": "Moderate \u2014 soft tissue, movement", "mult": 1.1 },
+            { "label": "Ribs / Side", "desc": "Difficult \u2014 sensitive area, curved surface", "mult": 1.2, "premium": true },
+            { "label": "Hand / Wrist", "desc": "Difficult \u2014 thin skin, high visibility", "mult": 1.2, "premium": true },
+            { "label": "Neck / Throat", "desc": "Difficult \u2014 sensitive, visible", "mult": 1.3, "premium": true },
+            { "label": "Foot / Ankle", "desc": "Difficult \u2014 thin skin, bony area", "mult": 1.2, "premium": true },
+            { "label": "Face / Ear / Finger", "desc": "Expert only \u2014 highest difficulty", "mult": 1.5, "premium": true }
           ]
         }
       ]
     },
     {
-      "title": "Style & Color",
+      "title": "Style",
       "groups": [
         {
           "key": "style",
-          "title": "What style?",
-          "subtitle": "This is the biggest factor in time and cost",
-          "type": "select",
+          "title": "What style(s)?",
+          "subtitle": "Select ALL that apply \u2014 mixing styles affects complexity",
+          "type": "multiselect",
           "layout": "half",
+          "default": [0],
           "options": [
-            { "label": "Fine Line", "desc": "Delicate, thin lines", "mult": 0.9 },
-            { "label": "Traditional / Bold", "desc": "Bold outlines, solid fill", "mult": 1.0 },
-            { "label": "Neo-Traditional", "desc": "Bold lines, detailed shading", "mult": 1.15 },
-            { "label": "Illustrative", "desc": "Artistic, custom drawn", "mult": 1.2 },
-            { "label": "Realism / Portrait", "desc": "Photorealistic, most time-intensive", "mult": 1.5 },
-            { "label": "Watercolor", "desc": "Soft edges, color blending", "mult": 1.3 },
-            { "label": "Japanese / Large Scale", "desc": "Irezumi, waves, dragons", "mult": 1.35 },
-            { "label": "Blackwork / Geometric", "desc": "Heavy black, patterns, dotwork", "mult": 1.2 }
+            { "label": "Fine Line", "desc": "Delicate, thin single-needle lines", "mult": 0.9 },
+            { "label": "Traditional / Old School", "desc": "Bold outlines, solid color fills, iconic imagery", "mult": 1.0 },
+            { "label": "Neo-Traditional", "desc": "Bold lines with detailed shading and depth", "mult": 1.15 },
+            { "label": "Illustrative", "desc": "Artistic, custom-drawn, sketch-style", "mult": 1.2 },
+            { "label": "Realism / Portrait", "desc": "Photorealistic \u2014 the most time-intensive style", "mult": 1.5 },
+            { "label": "Watercolor", "desc": "Soft edges, color splashes, painterly feel", "mult": 1.3 },
+            { "label": "Japanese / Irezumi", "desc": "Waves, koi, dragons \u2014 large-scale traditional", "mult": 1.35 },
+            { "label": "Blackwork / Geometric", "desc": "Heavy solid black, patterns, sacred geometry", "mult": 1.2 },
+            { "label": "Dotwork / Stipple", "desc": "Pointillism \u2014 thousands of individual dots", "mult": 1.25 },
+            { "label": "Tribal", "desc": "Bold black shapes, cultural patterns", "mult": 1.0 },
+            { "label": "Lettering / Script", "desc": "Text, quotes, names \u2014 font matters", "mult": 0.85 },
+            { "label": "Minimalist", "desc": "Simple, clean, few elements", "mult": 0.8 }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "title": "Details & Extras",
+      "groups": [
         {
           "key": "color",
           "title": "Color?",
@@ -72,12 +109,7 @@
             { "label": "Limited Color (1\u20133)", "mult": 1.1 },
             { "label": "Full Color", "mult": 1.25 }
           ]
-        }
-      ]
-    },
-    {
-      "title": "Detail & Extras",
-      "groups": [
+        },
         {
           "key": "detail",
           "title": "Detail level",
@@ -85,9 +117,9 @@
           "type": "select",
           "layout": "third",
           "options": [
-            { "label": "Simple", "desc": "Clean lines, minimal shading, bold shapes", "mult": 0.85 },
-            { "label": "Medium", "desc": "Some shading, a few elements, moderate detail", "mult": 1.0 },
-            { "label": "Complex", "desc": "Fine detail, heavy shading, multiple elements", "mult": 1.3 }
+            { "label": "Simple", "desc": "Clean lines, minimal shading", "mult": 0.85 },
+            { "label": "Medium", "desc": "Some shading, moderate detail", "mult": 1.0 },
+            { "label": "Complex", "desc": "Fine detail, heavy shading, many elements", "mult": 1.3 }
           ],
           "default": 1
         },
@@ -110,33 +142,39 @@
       ]
     }
   ],
+  "imageUpload": {
+    "icon": "\ud83d\udcf7",
+    "title": "Upload Reference Images",
+    "subtitle": "Up to 3 images \u2014 reference photos, placement ideas, inspiration",
+    "maxFiles": 3
+  },
   "referencePrompt": {
     "icon": "\ud83d\udcf7",
-    "title": "Bring a reference photo to your consultation.",
+    "title": "Bring references to your consultation.",
     "text": "Even a rough idea \u2014 a sketch, a screenshot, a Pinterest save \u2014 helps your artist understand your vision and saves everyone time."
   },
   "products": [
     {
       "name": "Mad Rabbit Tattoo Balm",
-      "url": "https://www.amazon.com/dp/B08FCLNKX6?tag=shopestimator20",
+      "url": "https://www.amazon.com/dp/B08FCLNKX6?tag=shopestimator-20",
       "price": "$19.99",
       "desc": "Natural aftercare balm \u2014 #1 rated. Use for first 2 weeks."
     },
     {
       "name": "Hustle Butter Deluxe",
-      "url": "https://www.amazon.com/dp/B00APC6GIS?tag=shopestimator20",
+      "url": "https://www.amazon.com/dp/B00APC6GIS?tag=shopestimator-20",
       "price": "$24.99",
       "desc": "Vegan tattoo care \u2014 before, during, and after sessions."
     },
     {
       "name": "Saniderm Bandage (3-pack)",
-      "url": "https://www.amazon.com/dp/B01MUFE078?tag=shopestimator20",
+      "url": "https://www.amazon.com/dp/B01MUFE078?tag=shopestimator-20",
       "price": "$14.99",
       "desc": "Medical-grade second-skin bandage for fast healing."
     },
     {
       "name": "EltaMD UV Sport SPF 50",
-      "url": "https://www.amazon.com/dp/B002MSN3QQ?tag=shopestimator20",
+      "url": "https://www.amazon.com/dp/B002MSN3QQ?tag=shopestimator-20",
       "price": "$29.99",
       "desc": "UV fades ink fast \u2014 protect your investment."
     }

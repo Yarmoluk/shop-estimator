@@ -135,6 +135,34 @@
 ".te-ref-icon{font-size:28px;margin-bottom:6px}\n" +
 ".te-ref-text{font-size:13px;color:#94a3b8;line-height:1.5}\n" +
 ".te-ref-text strong{color:#fff}\n" +
+/* Image upload styles */
+".te-upload-zone{background:#16213e;border:2px dashed #2a2a4a;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px;cursor:pointer;transition:border-color .2s,background .2s}\n" +
+".te-upload-zone:hover{border-color:" + a + "66;background:#1e2a45}\n" +
+".te-upload-zone.te-has-files{border-color:" + a + "44;border-style:solid}\n" +
+".te-upload-icon{font-size:32px;margin-bottom:8px}\n" +
+".te-upload-label{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}\n" +
+".te-upload-sub{font-size:12px;color:#64748b}\n" +
+".te-upload-input{display:none}\n" +
+".te-upload-previews{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center}\n" +
+".te-upload-thumb{width:72px;height:72px;border-radius:8px;object-fit:cover;border:2px solid " + a + "44}\n" +
+".te-upload-thumb-wrap{position:relative;display:inline-block}\n" +
+".te-upload-remove{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#e94560;color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;line-height:20px;text-align:center;padding:0}\n" +
+/* Artist selector styles */
+".te-artist-card{flex:1 1 100%;padding:14px 16px;background:#16213e;border:2px solid transparent;border-radius:10px;cursor:pointer;text-align:left;transition:border-color .2s,background .2s}\n" +
+".te-artist-card:hover{border-color:" + a + "44;background:#1e2a45}\n" +
+".te-artist-card.te-active{border-color:" + a + ";background:#1e2a45}\n" +
+".te-artist-name{font-size:14px;font-weight:700;color:#fff}\n" +
+".te-artist-rate{font-size:12px;color:" + a + ";margin-top:2px}\n" +
+".te-artist-bio{font-size:11px;color:#64748b;margin-top:4px;line-height:1.4}\n" +
+".te-artist-styles{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}\n" +
+".te-artist-style-tag{font-size:10px;padding:2px 8px;border-radius:4px;background:" + a + "22;color:" + a + ";font-weight:600}\n" +
+/* Multiselect chip styles */
+".te-opt.te-multiselect{position:relative}\n" +
+".te-opt.te-multiselect .te-check{display:none;position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:4px;background:" + a + ";color:#fff;font-size:12px;line-height:18px;text-align:center;font-weight:700}\n" +
+".te-opt.te-multiselect.te-active .te-check{display:block}\n" +
+/* Custom disclaimer */
+".te-custom-disclaimer{background:#1e2a45;border:1px solid #2a3a5a;border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:12px;color:#94a3b8;line-height:1.6}\n" +
+".te-custom-disclaimer strong{color:#fff}\n" +
 ".te-btn{display:block;width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s;text-align:center;text-decoration:none;color:#fff;font-family:inherit}\n" +
 ".te-btn:active{transform:scale(.97)}\n" +
 ".te-btn-primary{background:linear-gradient(135deg," + a + "," + a + "cc);color:#fff;box-shadow:0 4px 16px " + a + "55}\n" +
@@ -201,18 +229,42 @@
     }
 
     var CFG = config.defaults;
+
+    /* ── Auto-inject artist step from top-level artists array ── */
+    if (config.artists && config.artists.length > 0) {
+      /* Build the artist step automatically — shop owners just list artists */
+      var artistStep = {
+        title: "Choose Your Artist",
+        groups: [{
+          key: "_artist",
+          title: "Who do you want to work with?",
+          subtitle: config.artists.length + " artist" + (config.artists.length > 1 ? "s" : "") + " available",
+          type: "artist",
+          default: 0,
+          artists: config.artists
+        }]
+      };
+      /* Prepend artist step before all other steps */
+      config.steps = [artistStep].concat(config.steps);
+    }
+
     var STEPS = config.steps;
     var TOTAL_STEPS = STEPS.length + 1; /* +1 for summary/confirm step */
 
     /* ── Build initial state from config ── */
-    var STATE = { step: 0 };
+    var STATE = { step: 0, uploads: [] };
 
     STEPS.forEach(function (step) {
       step.groups.forEach(function (group) {
         if (group.type === "select") {
           STATE[group.key] = (typeof group.default === "number") ? group.default : 0;
+        } else if (group.type === "multiselect") {
+          /* Default: array of selected indices */
+          STATE[group.key] = Array.isArray(group.default) ? group.default.slice() : [0];
         } else if (group.type === "toggle") {
           STATE[group.key] = (typeof group.default === "boolean") ? group.default : false;
+        } else if (group.type === "artist") {
+          STATE[group.key] = (typeof group.default === "number") ? group.default : 0;
         }
       });
     });
@@ -236,7 +288,7 @@
       body.appendChild(dots);
     }
 
-    /* ── Option Group Builder ── */
+    /* ── Option Group Builder (single select) ── */
     function buildOptionGroup(body, group) {
       body.appendChild(el("div", "te-section-title", group.title));
       if (group.subtitle) body.appendChild(el("div", "te-section-sub", group.subtitle));
@@ -264,6 +316,87 @@
       body.appendChild(wrap);
     }
 
+    /* ── Multiselect Group Builder (select all that apply) ── */
+    function buildMultiselectGroup(body, group) {
+      body.appendChild(el("div", "te-section-title", group.title));
+      if (group.subtitle) body.appendChild(el("div", "te-section-sub", group.subtitle));
+      var wrap = el("div", "te-options");
+      group.options.forEach(function (item, i) {
+        var extraCls = "";
+        if (group.layout === "third") extraCls = " te-opt-third";
+        else if (group.layout === "full") extraCls = " te-opt-full";
+        var isSelected = STATE[group.key].indexOf(i) !== -1;
+        var btn = el("div", "te-opt te-multiselect" + extraCls + (isSelected ? " te-active" : ""));
+        var labelHtml = item.label + '<span class="te-check">\u2713</span>';
+        if (item.premium) labelHtml += '<span class="te-premium-badge">Premium</span>';
+        btn.innerHTML = labelHtml;
+        if (item.desc) {
+          var sub = el("small", "");
+          sub.textContent = item.desc;
+          btn.appendChild(sub);
+        }
+        btn.addEventListener("click", function () {
+          var idx = STATE[group.key].indexOf(i);
+          if (idx !== -1) {
+            /* Deselect — but keep at least one selected */
+            if (STATE[group.key].length > 1) {
+              STATE[group.key].splice(idx, 1);
+              btn.classList.remove("te-active");
+            }
+          } else {
+            STATE[group.key].push(i);
+            btn.classList.add("te-active");
+          }
+        });
+        wrap.appendChild(btn);
+      });
+      body.appendChild(wrap);
+    }
+
+    /* ── Artist Selector Builder ── */
+    function buildArtistGroup(body, group) {
+      body.appendChild(el("div", "te-section-title", group.title));
+      if (group.subtitle) body.appendChild(el("div", "te-section-sub", group.subtitle));
+      var wrap = el("div", "te-options");
+      group.artists.forEach(function (artist, i) {
+        var card = el("div", "te-artist-card" + (i === STATE[group.key] ? " te-active" : ""));
+
+        /* Name + tier badge */
+        var nameHtml = artist.name;
+        if (artist.tier) {
+          nameHtml += ' <span class="te-premium-badge">' + artist.tier + '</span>';
+        }
+        card.appendChild(el("div", "te-artist-name", nameHtml));
+
+        /* Rate display */
+        var rateText = "";
+        if (artist.rateType === "flat") {
+          rateText = artist.rates.map(function (r) { return r.label + ": $" + r.price; }).join(" &middot; ");
+        } else {
+          rateText = "$" + (artist.hourly || CFG.hourly) + "/hr";
+        }
+        card.appendChild(el("div", "te-artist-rate", rateText));
+
+        if (artist.bio) card.appendChild(el("div", "te-artist-bio", artist.bio));
+
+        if (artist.styles && artist.styles.length > 0) {
+          var tagsWrap = el("div", "te-artist-styles");
+          artist.styles.forEach(function (s) {
+            tagsWrap.appendChild(el("span", "te-artist-style-tag", s));
+          });
+          card.appendChild(tagsWrap);
+        }
+
+        card.addEventListener("click", function () {
+          STATE[group.key] = i;
+          wrap.querySelectorAll(".te-artist-card").forEach(function (c) { c.classList.remove("te-active"); });
+          card.classList.add("te-active");
+        });
+        wrap.appendChild(card);
+      });
+      body.appendChild(wrap);
+    }
+
     /* ── Toggle Builder ── */
     function buildToggle(body, group) {
       var row = el("div", "te-toggle" + (STATE[group.key] ? " te-active" : ""));
@@ -276,6 +409,73 @@
       wrap.style.marginBottom = "12px";
       wrap.appendChild(row);
       body.appendChild(wrap);
+    }
+
+    /* ── Image Upload Builder ── */
+    function buildImageUpload(body) {
+      var uploadCfg = config.imageUpload;
+      if (!uploadCfg) return;
+
+      var maxFiles = uploadCfg.maxFiles || 3;
+      var zone = el("div", "te-upload-zone" + (STATE.uploads.length > 0 ? " te-has-files" : ""));
+      var input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.multiple = maxFiles > 1;
+      input.className = "te-upload-input";
+
+      zone.innerHTML = '<div class="te-upload-icon">' + (uploadCfg.icon || "\ud83d\udcf7") + '</div>' +
+        '<div class="te-upload-label">' + (uploadCfg.title || "Upload Reference Images") + '</div>' +
+        '<div class="te-upload-sub">' + (uploadCfg.subtitle || "Up to " + maxFiles + " images (reference photos, placement ideas)") + '</div>';
+
+      zone.appendChild(input);
+
+      /* Click zone to trigger file picker */
+      zone.addEventListener("click", function (e) {
+        if (e.target !== input) input.click();
+      });
+
+      /* Preview thumbnails */
+      var previewWrap = el("div", "te-upload-previews");
+
+      function renderPreviews() {
+        previewWrap.innerHTML = "";
+        STATE.uploads.forEach(function (fileData, idx) {
+          var thumbWrap = el("div", "te-upload-thumb-wrap");
+          var img = el("img", "te-upload-thumb");
+          img.src = fileData.dataUrl;
+          img.alt = "Reference " + (idx + 1);
+          thumbWrap.appendChild(img);
+          var removeBtn = el("button", "te-upload-remove", "\u00d7");
+          removeBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            STATE.uploads.splice(idx, 1);
+            renderPreviews();
+            zone.classList.toggle("te-has-files", STATE.uploads.length > 0);
+          });
+          thumbWrap.appendChild(removeBtn);
+          previewWrap.appendChild(thumbWrap);
+        });
+      }
+
+      input.addEventListener("change", function () {
+        var files = Array.prototype.slice.call(input.files);
+        files.forEach(function (file) {
+          if (STATE.uploads.length >= maxFiles) return;
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            STATE.uploads.push({ name: file.name, dataUrl: e.target.result });
+            renderPreviews();
+            zone.classList.add("te-has-files");
+          };
+          reader.readAsDataURL(file);
+        });
+        input.value = "";
+      });
+
+      renderPreviews();
+      zone.appendChild(previewWrap);
+      body.appendChild(zone);
     }
 
     /* ── Navigation Buttons ── */
@@ -326,16 +526,32 @@
       return null;
     }
 
+    /* ── Find artist group if it exists ── */
+    function findArtistGroup() {
+      var allGroups = getAllGroups();
+      for (var i = 0; i < allGroups.length; i++) {
+        if (allGroups[i].type === "artist") return allGroups[i];
+      }
+      return null;
+    }
+
     /* ── Build summary label for a group selection ── */
     function getSummaryLabel(group) {
       if (group.type === "select") {
         var opt = group.options[STATE[group.key]];
         var label = opt.label;
-        /* Truncate long labels for summary */
         if (label.length > 40) label = label.substring(0, 37) + "...";
         return label;
+      } else if (group.type === "multiselect") {
+        var selected = STATE[group.key];
+        var labels = selected.map(function (idx) { return group.options[idx].label; });
+        var joined = labels.join(", ");
+        if (joined.length > 50) joined = joined.substring(0, 47) + "...";
+        return joined;
       } else if (group.type === "toggle") {
         return STATE[group.key] ? "Yes" : "No";
+      } else if (group.type === "artist") {
+        return group.artists[STATE[group.key]].name;
       }
       return "";
     }
@@ -360,18 +576,36 @@
         currentStep.groups.forEach(function (group) {
           if (group.type === "select") {
             buildOptionGroup(body, group);
+          } else if (group.type === "multiselect") {
+            buildMultiselectGroup(body, group);
           } else if (group.type === "toggle") {
             buildToggle(body, group);
+          } else if (group.type === "artist") {
+            buildArtistGroup(body, group);
           }
         });
       } else {
         /* Summary / confirm step (last virtual step) */
-        if (config.referencePrompt) {
+
+        /* Image upload (on summary step) */
+        if (config.imageUpload) {
+          buildImageUpload(body);
+        }
+
+        /* Reference prompt (if no imageUpload or in addition) */
+        if (config.referencePrompt && !config.imageUpload) {
           var rp = config.referencePrompt;
           var refBox = el("div", "te-ref-prompt");
           refBox.innerHTML = '<div class="te-ref-icon">' + (rp.icon || "\ud83d\udcf7") + '</div>' +
             '<div class="te-ref-text"><strong>' + rp.title + '</strong><br>' + rp.text + '</div>';
           body.appendChild(refBox);
+        }
+
+        /* Custom disclaimer (shop-specific, shown before estimate) */
+        if (config.customDisclaimer) {
+          var discBox = el("div", "te-custom-disclaimer");
+          discBox.innerHTML = config.customDisclaimer;
+          body.appendChild(discBox);
         }
 
         /* Selection summary */
@@ -380,12 +614,18 @@
         getAllGroups().forEach(function (group) {
           var rowEl = el("div", "te-factor-row");
           var labelText = group.title || group.key;
-          /* Clean up label — remove question marks etc for display */
           labelText = labelText.replace(/\?$/, "");
           rowEl.appendChild(el("span", "", labelText));
           rowEl.appendChild(el("span", "", getSummaryLabel(group)));
           summaryBox.appendChild(rowEl);
         });
+        /* Show upload count if any */
+        if (STATE.uploads.length > 0) {
+          var uploadRow = el("div", "te-factor-row");
+          uploadRow.appendChild(el("span", "", "Reference Images"));
+          uploadRow.appendChild(el("span", "", STATE.uploads.length + " uploaded"));
+          summaryBox.appendChild(uploadRow);
+        }
         body.appendChild(summaryBox);
       }
 
@@ -405,6 +645,7 @@
     function showResults() {
       var allGroups = getAllGroups();
       var baseGroup = findBaseHoursGroup();
+      var artistGroup = findArtistGroup();
 
       if (!baseGroup) {
         console.error("[Estimator Engine] No base hours group found in config.");
@@ -413,7 +654,33 @@
 
       var baseOpt = baseGroup.options[STATE[baseGroup.key]];
       var baseHours = baseOpt.hours;
-      var baseCost = baseHours * CFG.hourly;
+
+      /* Determine hourly rate — from artist selector or config default */
+      var effectiveHourly = CFG.hourly;
+      var selectedArtist = null;
+      var isFlatRate = false;
+      var flatRatePrice = 0;
+
+      if (artistGroup) {
+        selectedArtist = artistGroup.artists[STATE[artistGroup.key]];
+        if (selectedArtist.rateType === "flat") {
+          isFlatRate = true;
+          /* For flat-rate artists, pick the rate tier closest to estimated hours */
+          var rates = selectedArtist.rates;
+          flatRatePrice = rates[0].price; /* default to first */
+          for (var ri = 0; ri < rates.length; ri++) {
+            if (rates[ri].maxHours && baseHours <= rates[ri].maxHours) {
+              flatRatePrice = rates[ri].price;
+              break;
+            }
+            flatRatePrice = rates[ri].price; /* fallback to last */
+          }
+        } else {
+          effectiveHourly = selectedArtist.hourly || CFG.hourly;
+        }
+      }
+
+      var baseCost = isFlatRate ? flatRatePrice : (baseHours * effectiveHourly);
 
       /* Calculate total multiplier from all other groups */
       var totalMult = 1.0;
@@ -423,7 +690,6 @@
         if (group.type === "select") {
           var opt = group.options[STATE[group.key]];
           if (typeof opt.hours === "number") {
-            /* This is the base-hours group — show hours, not mult */
             factorRows.push({
               label: group.title ? group.title.replace(/\?$/, "") : group.key,
               value: opt.label,
@@ -439,6 +705,29 @@
               detail: pct
             });
           }
+        } else if (group.type === "multiselect") {
+          /* For multiselect: use the highest multiplier among selected options */
+          var selected = STATE[group.key];
+          var maxMult = 1.0;
+          var selectedLabels = [];
+          selected.forEach(function (idx) {
+            var opt = group.options[idx];
+            selectedLabels.push(opt.label);
+            if (typeof opt.mult === "number" && opt.mult > maxMult) {
+              maxMult = opt.mult;
+            }
+          });
+          /* If combining styles, add a small stacking bonus per extra style */
+          if (selected.length > 1) {
+            maxMult += (selected.length - 1) * 0.05;
+          }
+          totalMult *= maxMult;
+          var mPct = maxMult > 1 ? "+" + Math.round((maxMult - 1) * 100) + "%" : "Standard";
+          factorRows.push({
+            label: group.title ? group.title.replace(/\?$/, "") : group.key,
+            value: selectedLabels.join(", "),
+            detail: mPct
+          });
         } else if (group.type === "toggle") {
           var isOn = STATE[group.key];
           var mult = isOn ? group.mult_on : group.mult_off;
@@ -450,17 +739,32 @@
               detail: "+" + Math.round((group.mult_on - 1) * 100) + "%"
             });
           }
+        } else if (group.type === "artist") {
+          var a = group.artists[STATE[group.key]];
+          factorRows.push({
+            label: "Artist",
+            value: a.name,
+            detail: isFlatRate ? "Flat rate" : ("$" + a.hourly + "/hr")
+          });
         }
       });
 
       var estimated = baseCost * totalMult;
-      var low = roundTo10(estimated * 0.75);
-      var high = roundTo10(estimated * 1.25);
+      var low, high;
+
+      if (isFlatRate) {
+        /* Flat-rate: show the rate as-is with smaller variance */
+        low = roundTo10(estimated * 0.9);
+        high = roundTo10(estimated * 1.1);
+      } else {
+        low = roundTo10(estimated * 0.75);
+        high = roundTo10(estimated * 1.25);
+      }
       if (low < CFG.minimum) low = CFG.minimum;
       if (high < CFG.minimum) high = CFG.minimum;
 
       var totalHours = baseHours * totalMult;
-      var maxSession = 4;
+      var maxSession = CFG.maxSession || 4;
       var sessions = Math.ceil(totalHours / maxSession);
 
       var cur = config.currency || "$";
@@ -480,8 +784,16 @@
       var priceBox = el("div", "te-result-price");
       priceBox.appendChild(el("p", "te-range",
         "<span class='te-range-accent'>" + cur + low + "</span> &ndash; <span class='te-range-accent'>" + cur + high + "</span>"));
-      priceBox.appendChild(el("p", "te-base",
-        "Estimated " + totalHours.toFixed(1) + " hours @ " + cur + CFG.hourly + "/hr<br><em>Final quote requires consultation</em>"));
+
+      var baseText = "";
+      if (isFlatRate) {
+        baseText = selectedArtist.name + " &middot; Flat rate pricing<br><em>Final quote requires consultation</em>";
+      } else {
+        baseText = "Estimated " + totalHours.toFixed(1) + " hours @ " + cur + effectiveHourly + "/hr";
+        if (selectedArtist) baseText += " (" + selectedArtist.name + ")";
+        baseText += "<br><em>Final quote requires consultation</em>";
+      }
+      priceBox.appendChild(el("p", "te-base", baseText));
       body.appendChild(priceBox);
 
       /* Multi-session flag */
@@ -490,7 +802,7 @@
         flag.innerHTML = '<div class="te-flag-icon">\u23f0</div>' +
           '<div class="te-flag-text"><strong>This will likely require ' + sessions + ' sessions</strong> (max ' + maxSession + ' hrs each).<br>' +
           'Total estimated time: ' + totalHours.toFixed(1) + ' hours with adequate rest between sessions.' +
-          (sessions >= 3 ? '<br>Large projects are often scheduled as a series \u2014 your provider will create a session plan.' : '') + '</div>';
+          (sessions >= 3 ? '<br>Large projects are often scheduled as a series \u2014 your artist will create a session plan.' : '') + '</div>';
         body.appendChild(flag);
       } else {
         var sessBox = el("div", "te-sessions");
@@ -517,6 +829,21 @@
         refReminder.innerHTML = '<div class="te-ref-reminder-icon">' + (rp.icon || "\ud83d\udcf7") + '</div>' +
           '<div class="te-ref-reminder-text"><strong>' + rp.title + '</strong> ' + rp.text + '</div>';
         body.appendChild(refReminder);
+      }
+
+      /* Upload summary on results */
+      if (STATE.uploads.length > 0) {
+        var uploadSummary = el("div", "te-ref-reminder");
+        uploadSummary.innerHTML = '<div class="te-ref-reminder-icon">\ud83d\uddbc\ufe0f</div>' +
+          '<div class="te-ref-reminder-text"><strong>' + STATE.uploads.length + ' reference image' + (STATE.uploads.length > 1 ? 's' : '') + ' ready.</strong> Bring ' + (STATE.uploads.length > 1 ? 'these' : 'this') + ' to your consultation for your artist to review.</div>';
+        body.appendChild(uploadSummary);
+      }
+
+      /* Custom disclaimer */
+      if (config.customDisclaimer) {
+        var discBox = el("div", "te-custom-disclaimer");
+        discBox.innerHTML = config.customDisclaimer;
+        body.appendChild(discBox);
       }
 
       /* Booking CTA */

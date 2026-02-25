@@ -106,25 +106,25 @@
   "products": [
     {
       "name": "Chemical Guys Wash & Wax",
-      "url": "https://www.amazon.com/dp/B00BJCMDAW?tag=shopestimator20",
+      "url": "https://www.amazon.com/dp/B00BJCMDAW?tag=shopestimator-20",
       "price": "$24.99",
       "desc": "All-in-one car wash soap with wax protection."
     },
     {
       "name": "Meguiar's Ultimate Quik Wax",
-      "url": "https://www.amazon.com/dp/B06XHKTZGN?tag=shopestimator20",
+      "url": "https://www.amazon.com/dp/B06XHKTZGN?tag=shopestimator-20",
       "price": "$14.99",
       "desc": "Spray-on wax for quick shine between details."
     },
     {
       "name": "CarGuys Super Cleaner",
-      "url": "https://www.amazon.com/dp/B071XB18HF?tag=shopestimator20",
+      "url": "https://www.amazon.com/dp/B071XB18HF?tag=shopestimator-20",
       "price": "$19.97",
       "desc": "All-purpose interior cleaner for any surface."
     },
     {
       "name": "MATCC Microfiber Towels",
-      "url": "https://www.amazon.com/dp/B09WDCJXLM?tag=shopestimator20",
+      "url": "https://www.amazon.com/dp/B09WDCJXLM?tag=shopestimator-20",
       "price": "$12.99",
       "desc": "Lint-free drying and polishing cloths."
     }
