@@ -182,7 +182,7 @@
   <div class="phone-frame">
     <div class="phone-notch"></div>
     <div class="phone-screen">
-      <script src="engine.js" data-config="configs/tattoo.json" data-shop="Iron & Ink Tattoo" data-minimum="100" data-hourly="175"></script>
+      <script src="engine.js" data-config="configs/tattoo.json" data-shop="Iron & Ink Tattoo" data-minimum="100" data-hourly="175" data-email="demo@ironandink.com"></script>
     </div>
     <div class="phone-home"></div>
   </div>
@@ -310,7 +310,11 @@
       </div>
     </div>
     <div class="cfg-section">
-      <div class="cfg-label">Booking Link</div>
+      <div class="cfg-label">Shop Email <span class="cfg-optional">customers send consultation requests here</span></div>
+      <input type="email" id="cfgEmail" class="cfg-input" placeholder="info@yourshop.com" oninput="updateCode()">
+    </div>
+    <div class="cfg-section">
+      <div class="cfg-label">Booking Link <span class="cfg-optional">optional &mdash; online booking page</span></div>
       <input type="url" id="cfgBooking" class="cfg-input" placeholder="https://your-booking-page.com" oninput="updateCode()">
     </div>
     <div class="cfg-section">
@@ -493,6 +497,7 @@ function updateCode() {
   var min = document.getElementById('cfgMin').value || '100';
   var hourly = document.getElementById('cfgHourly').value || '150';
   var accent = document.getElementById('cfgColor').value || '#e94560';
+  var shopEmail = document.getElementById('cfgEmail').value || '';
   var booking = document.getElementById('cfgBooking').value || '';
   var vertical = document.getElementById('cfgVertical').value;
 
@@ -521,6 +526,7 @@ function updateCode() {
       '  data-minimum="' + min + '"\n' +
       '  data-hourly="' + hourly + '"\n' +
       '  data-accent="' + accent + '"' +
+      (shopEmail ? '\n  data-email="' + shopEmail + '"' : '') +
       (booking ? '\n  data-booking="' + booking + '"' : '') +
       '><\/script>';
 
@@ -531,6 +537,7 @@ function updateCode() {
       '  <span class="a">data-minimum=</span><span class="v">"' + esc(min) + '"</span>\n' +
       '  <span class="a">data-hourly=</span><span class="v">"' + esc(hourly) + '"</span>\n' +
       '  <span class="a">data-accent=</span><span class="v">"' + esc(accent) + '"</span>' +
+      (shopEmail ? '\n  <span class="a">data-email=</span><span class="v">"' + esc(shopEmail) + '"</span>' : '') +
       (booking ? '\n  <span class="a">data-booking=</span><span class="v">"' + esc(booking) + '"</span>' : '') +
       '<span class="t">&gt;&lt;/script&gt;</span>';
   } else {
@@ -540,6 +547,7 @@ function updateCode() {
       '  data-minimum="' + min + '"\n' +
       '  data-hourly="' + hourly + '"\n' +
       '  data-accent="' + accent + '"' +
+      (shopEmail ? '\n  data-email="' + shopEmail + '"' : '') +
       (booking ? '\n  data-booking="' + booking + '"' : '') +
       '><\/script>';
 
@@ -549,6 +557,7 @@ function updateCode() {
       '  <span class="a">data-minimum=</span><span class="v">"' + esc(min) + '"</span>\n' +
       '  <span class="a">data-hourly=</span><span class="v">"' + esc(hourly) + '"</span>\n' +
       '  <span class="a">data-accent=</span><span class="v">"' + esc(accent) + '"</span>' +
+      (shopEmail ? '\n  <span class="a">data-email=</span><span class="v">"' + esc(shopEmail) + '"</span>' : '') +
       (booking ? '\n  <span class="a">data-booking=</span><span class="v">"' + esc(booking) + '"</span>' : '') +
       '<span class="t">&gt;&lt;/script&gt;</span>';
   }

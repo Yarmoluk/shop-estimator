@@ -109,14 +109,16 @@
     var hourly = scriptEl.getAttribute("data-hourly");
     var accent = scriptEl.getAttribute("data-accent");
     var booking = scriptEl.getAttribute("data-booking");
+    var email = scriptEl.getAttribute("data-email");
 
-    if (shop || minimum || hourly || accent || booking) {
+    if (shop || minimum || hourly || accent || booking || email) {
       overrides.defaults = {};
       if (shop) overrides.defaults.shop = shop;
       if (minimum) overrides.defaults.minimum = parseFloat(minimum);
       if (hourly) overrides.defaults.hourly = parseFloat(hourly);
       if (accent) overrides.defaults.accent = accent;
       if (booking) overrides.defaults.booking = booking;
+      if (email) overrides.defaults.email = email;
     }
 
     if (Object.keys(overrides).length > 0) {
@@ -284,8 +286,17 @@
       config.steps = [artistStep].concat(config.steps);
     }
 
+    /* ── Auto-inject image upload as its own step ── */
+    var HAS_UPLOAD = !!(config.imageUpload);
+    var UPLOAD_STEP_INDEX = -1;
+
     var STEPS = config.steps;
-    var TOTAL_STEPS = STEPS.length + 1; /* +1 for summary/confirm step */
+    /* Total = config steps + (upload step if enabled) + summary step */
+    var TOTAL_STEPS = STEPS.length + (HAS_UPLOAD ? 1 : 0) + 1;
+    if (HAS_UPLOAD) {
+      UPLOAD_STEP_INDEX = STEPS.length; /* right after all config steps */
+    }
+    var SUMMARY_STEP_INDEX = TOTAL_STEPS - 1;
 
     /* ── Build initial state from config ── */
     var STATE = { step: 0, uploads: [] };
@@ -671,6 +682,7 @@
 
       /* Config-driven steps */
       if (STATE.step < STEPS.length) {
+        /* Regular config step */
         var currentStep = STEPS[STATE.step];
         currentStep.groups.forEach(function (group) {
           if (group.type === "select") {
@@ -683,24 +695,22 @@
             buildArtistGroup(body, group);
           }
         });
-      } else {
-        /* Summary / confirm step (last virtual step) */
+      } else if (HAS_UPLOAD && STATE.step === UPLOAD_STEP_INDEX) {
+        /* ── Dedicated image upload step ── */
+        buildImageUpload(body);
 
-        /* Image upload (on summary step) */
-        if (config.imageUpload) {
-          buildImageUpload(body);
-        }
-
-        /* Reference prompt (if no imageUpload or in addition) */
-        if (config.referencePrompt && !config.imageUpload) {
+        /* Reference prompt below upload */
+        if (config.referencePrompt) {
           var rp = config.referencePrompt;
           var refBox = el("div", "te-ref-prompt");
           refBox.innerHTML = '<div class="te-ref-icon">' + (rp.icon || "\ud83d\udcf7") + '</div>' +
             '<div class="te-ref-text"><strong>' + rp.title + '</strong><br>' + rp.text + '</div>';
           body.appendChild(refBox);
         }
+      } else {
+        /* ── Summary / confirm step ── */
 
-        /* Custom disclaimer (shop-specific, shown before estimate) */
+        /* Custom disclaimer */
         if (config.customDisclaimer) {
           var discBox = el("div", "te-custom-disclaimer");
           discBox.innerHTML = config.customDisclaimer;
@@ -964,9 +974,62 @@
         body.appendChild(discBox);
       }
 
-      /* Booking CTA */
+      /* ── Build consultation email body ── */
+      function buildEmailBody() {
+        var lines = [];
+        lines.push("Hi " + CFG.shop + ",");
+        lines.push("");
+        lines.push("I used your pricing estimator and got an estimate of " + cur + low + " - " + cur + high + ".");
+        lines.push("I'd like to book a consultation. Here are my details:");
+        lines.push("");
+        lines.push("--- My Selections ---");
+        factorRows.forEach(function (r) {
+          lines.push(r.label + ": " + (r.value || r.detail));
+        });
+        if (sessions > 1) {
+          lines.push("Estimated sessions: " + sessions + " (" + totalHours.toFixed(1) + " total hours)");
+        } else {
+          lines.push("Estimated time: " + totalHours.toFixed(1) + " hours (single session)");
+        }
+        if (STATE.uploads.length > 0) {
+          lines.push("");
+          lines.push("--- Reference Images ---");
+          STATE.uploads.forEach(function (u, idx) {
+            var line = (u.category || "Image") + " #" + (idx + 1);
+            if (u.caption) line += ": " + u.caption;
+            lines.push(line);
+          });
+          lines.push("");
+          lines.push("** I have " + STATE.uploads.length + " reference photo" + (STATE.uploads.length > 1 ? "s" : "") + " to share — they're attached to this email. **");
+        }
+        lines.push("");
+        lines.push("Looking forward to hearing from you!");
+        return lines.join("\n");
+      }
+
+      /* ── Send consultation request (email) ── */
+      if (CFG.email) {
+        var emailSubject = "Consultation Request — " + CFG.shop + " (" + cur + low + "-" + cur + high + ")";
+        var emailBody = buildEmailBody();
+        var mailtoUrl = "mailto:" + encodeURIComponent(CFG.email) +
+          "?subject=" + encodeURIComponent(emailSubject) +
+          "&body=" + encodeURIComponent(emailBody);
+
+        var emailBtn = el("a", "te-btn te-btn-book", "\ud83d\udce9 Send Consultation Request");
+        emailBtn.href = mailtoUrl;
+        body.appendChild(emailBtn);
+
+        if (STATE.uploads.length > 0) {
+          var attachNote = el("div", "te-ref-reminder");
+          attachNote.innerHTML = '<div class="te-ref-reminder-icon">\ud83d\udcce</div>' +
+            '<div class="te-ref-reminder-text"><strong>Don\u2019t forget to attach your ' + STATE.uploads.length + ' reference photo' + (STATE.uploads.length > 1 ? 's' : '') + '</strong> before hitting send. Your email app will open with everything pre-filled \u2014 just add the images from your camera roll.</div>';
+          body.appendChild(attachNote);
+        }
+      }
+
+      /* Booking CTA (fallback or in addition to email) */
       if (CFG.booking) {
-        var bookBtn = el("a", "te-btn te-btn-book", "Get Your Exact Quote \u2192");
+        var bookBtn = el("a", "te-btn " + (CFG.email ? "te-btn-outline" : "te-btn-book"), (CFG.email ? "Or Book Online \u2192" : "Get Your Exact Quote \u2192"));
         bookBtn.href = CFG.booking;
         bookBtn.target = "_blank";
         bookBtn.rel = "noopener noreferrer";
