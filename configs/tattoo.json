@@ -11,25 +11,6 @@
     "maxSession": 4
   },
 
-  "artists": [
-    {
-      "name": "Artist 1",
-      "tier": "Senior",
-      "hourly": 150,
-      "rateType": "hourly",
-      "bio": "Versatile artist. Edit this in your config JSON.",
-      "styles": ["Traditional", "Illustrative"]
-    },
-    {
-      "name": "Artist 2",
-      "tier": "Junior",
-      "hourly": 100,
-      "rateType": "hourly",
-      "bio": "Apprentice artist, great for smaller pieces.",
-      "styles": ["Fine Line", "Minimalist"]
-    }
-  ],
-
   "steps": [
     {
       "title": "Size & Placement",
