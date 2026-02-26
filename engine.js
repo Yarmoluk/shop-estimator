@@ -243,6 +243,8 @@
 ".te-product-desc{font-size:11px;color:#81c784;margin-top:2px}\n" +
 ".te-product-link{flex-shrink:0;margin-left:12px;padding:7px 14px;background:#43a047;color:#fff;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s}\n" +
 ".te-product-link:hover{background:#388e3c}\n" +
+".te-combo-deal{background:#2e5a2e;border:1px dashed #43a047;border-radius:10px;padding:12px 14px;margin-top:10px;font-size:12px;color:#a5d6a7;line-height:1.5;text-align:center}\n" +
+".te-combo-deal strong{color:#fff}\n" +
 ".te-disclaimer{font-size:11px;color:#64748b;text-align:center;margin-top:16px;line-height:1.5}\n" +
 ".te-powered{text-align:center;margin-top:12px;padding-top:12px;border-top:1px solid #ffffff0a}\n" +
 ".te-powered a{color:#64748b;text-decoration:none;font-size:11px;font-weight:500;letter-spacing:.3px;transition:color .2s}\n" +
@@ -699,6 +701,66 @@
         /* ── Dedicated image upload step ── */
         buildImageUpload(body);
 
+        /* Body part / cover-up photo upload */
+        if (config.bodyPhotoUpload) {
+          var bpCfg = config.bodyPhotoUpload;
+          body.appendChild(el("div", "te-section-title", (bpCfg.icon || "📸") + " " + (bpCfg.title || "Upload Body Part / Cover-Up Photo")));
+          body.appendChild(el("div", "te-section-sub", bpCfg.subtitle || "Photo of the area where you'd like the tattoo"));
+
+          var bpInput = document.createElement("input");
+          bpInput.type = "file";
+          bpInput.accept = "image/*";
+          bpInput.className = "te-upload-input";
+          body.appendChild(bpInput);
+
+          var bpCardsWrap = el("div", "te-upload-cards");
+
+          function renderBodyCards() {
+            bpCardsWrap.innerHTML = "";
+            (STATE.bodyPhotos || []).forEach(function (fileData, idx) {
+              var card = el("div", "te-upload-card");
+              var img = el("img", "te-upload-thumb");
+              img.src = fileData.dataUrl;
+              img.alt = "Body photo " + (idx + 1);
+              card.appendChild(img);
+              var removeBtn = el("button", "te-upload-remove", "✕");
+              removeBtn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                STATE.bodyPhotos.splice(idx, 1);
+                renderBodyCards();
+              });
+              card.appendChild(removeBtn);
+              bpCardsWrap.appendChild(card);
+            });
+
+            if ((STATE.bodyPhotos || []).length < (bpCfg.maxFiles || 1)) {
+              var addCard = el("div", "te-upload-card te-upload-add");
+              addCard.innerHTML = '<div class="te-upload-add-icon">+</div><div class="te-upload-add-text">Add photo</div>';
+              addCard.addEventListener("click", function () { bpInput.click(); });
+              bpCardsWrap.appendChild(addCard);
+            }
+          }
+
+          if (!STATE.bodyPhotos) STATE.bodyPhotos = [];
+          bpInput.addEventListener("change", function () {
+            var files = Array.prototype.slice.call(bpInput.files);
+            var maxF = bpCfg.maxFiles || 1;
+            files.forEach(function (file) {
+              if (STATE.bodyPhotos.length >= maxF) return;
+              var reader = new FileReader();
+              reader.onload = function (e) {
+                STATE.bodyPhotos.push({ dataUrl: e.target.result, name: file.name });
+                renderBodyCards();
+              };
+              reader.readAsDataURL(file);
+            });
+            bpInput.value = "";
+          });
+
+          renderBodyCards();
+          body.appendChild(bpCardsWrap);
+        }
+
         /* Reference prompt below upload */
         if (config.referencePrompt) {
           var rp = config.referencePrompt;
@@ -808,12 +870,10 @@
             });
           } else if (typeof opt.mult === "number") {
             totalMult *= opt.mult;
-            var pct = opt.mult > 1 ? "+" + Math.round((opt.mult - 1) * 100) + "%" :
-                      opt.mult < 1 ? "-" + Math.round((1 - opt.mult) * 100) + "%" : "Standard";
             factorRows.push({
               label: group.title ? group.title.replace(/\?$/, "") : group.key,
               value: opt.label,
-              detail: pct
+              detail: ""
             });
           }
         } else if (group.type === "multiselect") {
@@ -833,11 +893,10 @@
             maxMult += (selected.length - 1) * 0.05;
           }
           totalMult *= maxMult;
-          var mPct = maxMult > 1 ? "+" + Math.round((maxMult - 1) * 100) + "%" : "Standard";
           factorRows.push({
             label: group.title ? group.title.replace(/\?$/, "") : group.key,
             value: selectedLabels.join(", "),
-            detail: mPct
+            detail: ""
           });
         } else if (group.type === "toggle") {
           var isOn = STATE[group.key];
@@ -847,7 +906,7 @@
             factorRows.push({
               label: group.title || group.key,
               value: "Yes",
-              detail: "+" + Math.round((group.mult_on - 1) * 100) + "%"
+              detail: ""
             });
           }
         } else if (group.type === "artist") {
@@ -924,11 +983,11 @@
 
       /* Price Factors */
       var factors = el("div", "te-factors");
-      factors.appendChild(el("h4", "", "Price Factors"));
+      factors.appendChild(el("h4", "", "Your Selections"));
       factorRows.forEach(function (r) {
         var rowEl = el("div", "te-factor-row");
         rowEl.appendChild(el("span", "", r.label));
-        rowEl.appendChild(el("span", "", r.detail));
+        rowEl.appendChild(el("span", "", r.value || r.detail));
         factors.appendChild(rowEl);
       });
       body.appendChild(factors);
@@ -1046,13 +1105,25 @@
           info.appendChild(el("div", "te-product-name", p.name));
           info.appendChild(el("div", "te-product-desc", p.desc));
           card.appendChild(info);
-          var link = el("a", "te-product-link", p.price);
-          link.href = p.url;
-          link.target = "_blank";
-          link.rel = "noopener noreferrer sponsored";
-          card.appendChild(link);
+          if (p.url) {
+            var link = el("a", "te-product-link", p.price);
+            link.href = p.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer sponsored";
+            card.appendChild(link);
+          } else {
+            card.appendChild(el("span", "te-product-link", p.price));
+          }
           aftercare.appendChild(card);
         });
+        /* Combo deal */
+        if (config.productsCombo) {
+          var combo = config.productsCombo;
+          var comboBox = el("div", "te-combo-deal");
+          comboBox.innerHTML = '<strong>' + combo.label + '</strong><br>' + combo.desc;
+          aftercare.appendChild(comboBox);
+        }
+
         body.appendChild(aftercare);
       }
 
