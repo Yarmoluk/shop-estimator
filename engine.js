@@ -234,29 +234,74 @@
 ".te-ref-reminder .te-ref-reminder-icon{font-size:18px;flex-shrink:0}\n" +
 ".te-ref-reminder .te-ref-reminder-text{font-size:12px;color:#94a3b8;line-height:1.5}\n" +
 ".te-ref-reminder .te-ref-reminder-text strong{color:#fff}\n" +
-".te-aftercare{background:#1e3a1e;border-radius:12px;padding:18px;margin-bottom:20px}\n" +
-".te-aftercare h4{margin:0 0 12px;font-size:14px;font-weight:600;color:#43a047}\n" +
-".te-product{display:flex;justify-content:space-between;align-items:center;background:#163016;border-radius:10px;padding:12px 14px;margin-bottom:8px}\n" +
+".te-aftercare{background:#1a2a4e;border-radius:12px;padding:18px;margin-bottom:20px}\n" +
+".te-aftercare h4{margin:0 0 4px;font-size:14px;font-weight:600;color:#365C9E}\n" +
+".te-aftercare .te-aftercare-sub{margin:0 0 12px;font-size:12px;color:#8aa3c8;line-height:1.5}\n" +
+".te-product{display:flex;justify-content:space-between;align-items:center;background:#152244;border-radius:10px;padding:12px 14px;margin-bottom:8px}\n" +
 ".te-product:last-of-type{margin-bottom:0}\n" +
 ".te-product-info{flex:1;min-width:0}\n" +
 ".te-product-name{font-size:13px;font-weight:600;color:#e0e0e0}\n" +
-".te-product-desc{font-size:11px;color:#81c784;margin-top:2px}\n" +
-".te-product-link{flex-shrink:0;margin-left:12px;padding:7px 14px;background:#43a047;color:#fff;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s}\n" +
-".te-product-link:hover{background:#388e3c}\n" +
-".te-combo-deal{background:#2e5a2e;border:1px dashed #43a047;border-radius:10px;padding:12px 14px;margin-top:10px;font-size:12px;color:#a5d6a7;line-height:1.5;text-align:center}\n" +
+".te-product-desc{font-size:11px;color:#8aa3c8;margin-top:2px}\n" +
+".te-product-link{flex-shrink:0;margin-left:12px;padding:7px 14px;background:#365C9E;color:#fff;border-radius:8px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s}\n" +
+".te-product-link:hover{background:#2a4a82}\n" +
+".te-combo-deal{background:#1e3460;border:1px dashed #365C9E;border-radius:10px;padding:12px 14px;margin-top:10px;font-size:12px;color:#8aa3c8;line-height:1.5;text-align:center}\n" +
 ".te-combo-deal strong{color:#fff}\n" +
 ".te-disclaimer{font-size:11px;color:#64748b;text-align:center;margin-top:16px;line-height:1.5}\n" +
 ".te-powered{text-align:center;margin-top:12px;padding-top:12px;border-top:1px solid #ffffff0a}\n" +
 ".te-powered a{color:#64748b;text-decoration:none;font-size:11px;font-weight:500;letter-spacing:.3px;transition:color .2s}\n" +
 ".te-powered a:hover{color:" + a + "}\n" +
 ".te-powered a span{opacity:.6}\n" +
-"@media(max-width:480px){.te-root{margin:12px 8px;border-radius:12px}.te-body{padding:18px 16px}.te-opt{flex:1 1 100%}.te-opt-third{flex:1 1 100%}.te-result-price .te-range{font-size:26px}.te-nav-row{flex-direction:column}}\n";
+"@media(max-width:600px){.te-root{margin:12px 8px;border-radius:12px;max-width:100%}.te-body{padding:18px 16px}.te-header{padding:20px 16px}.te-opt{flex:1 1 100%}.te-opt-third{flex:1 1 100%}.te-result-price .te-range{font-size:26px}.te-nav-row{flex-direction:column}.te-upload-card{flex-direction:column}.te-upload-thumb{width:100%;height:120px}.te-artist-card{padding:12px}}\n" +
+"@media(min-width:601px) and (max-width:1024px){.te-root{margin:20px auto;max-width:540px}}\n" +
+"@media(min-width:1025px){.te-root{margin:24px auto;max-width:540px}}\n";
 
     var styleEl = document.createElement("style");
     styleEl.setAttribute("data-estimator-engine", "true");
     styleEl.textContent = css;
     document.head.appendChild(styleEl);
   }
+
+  /* ── Default affiliate aftercare products (used when config has no products) ── */
+  var DEFAULT_PRODUCTS = [
+    {
+      name: "Hustle Butter Deluxe",
+      url: "https://www.amazon.com/dp/B00AAK1FB0?tag=YOURTAG-20",
+      price: "$24.99",
+      desc: "#1 rated tattoo aftercare — vegan, works during and after your session."
+    },
+    {
+      name: "Mad Rabbit Tattoo Balm",
+      url: "https://www.amazon.com/dp/B07NDBGLKM?tag=YOURTAG-20",
+      price: "$19.99",
+      desc: "Natural healing balm with botanical ingredients. Use for first 2 weeks."
+    },
+    {
+      name: "Aquaphor Healing Ointment",
+      url: "https://www.amazon.com/dp/B0107QNFQA?tag=YOURTAG-20",
+      price: "$6.99",
+      desc: "Dermatologist recommended — protective barrier for fresh tattoos. Days 1-3."
+    },
+    {
+      name: "Saniderm Bandage (3-Pack)",
+      url: "https://www.amazon.com/dp/B01GCMIFHW?tag=YOURTAG-20",
+      price: "$14.99",
+      desc: "Medical-grade second-skin bandage. Most shops use this — keep extras at home."
+    },
+    {
+      name: "Dr. Bronner's Baby Unscented Soap",
+      url: "https://www.amazon.com/dp/B00120VWJ0?tag=YOURTAG-20",
+      price: "$11.99",
+      desc: "Gentle unscented wash for fresh tattoos. 90%+ organic ingredients."
+    },
+    {
+      name: "EltaMD UV Sport SPF 50",
+      url: "https://www.amazon.com/dp/B002MSN3QQ?tag=YOURTAG-20",
+      price: "$29.50",
+      desc: "Best sunscreen for healed tattoos. UV fades ink fast — protect your investment."
+    }
+  ];
+  var DEFAULT_PRODUCTS_TITLE = "Recommended Aftercare";
+  var DEFAULT_PRODUCTS_SUBTITLE = "Proper aftercare is the difference between a tattoo that heals beautifully and one that fades.";
 
   /* ══════════════════════════════════════════════════════════
      ESTIMATOR INSTANCE — config-driven widget
@@ -410,12 +455,8 @@
       group.artists.forEach(function (artist, i) {
         var card = el("div", "te-artist-card" + (i === STATE[group.key] ? " te-active" : ""));
 
-        /* Name + tier badge */
-        var nameHtml = artist.name;
-        if (artist.tier) {
-          nameHtml += ' <span class="te-premium-badge">' + artist.tier + '</span>';
-        }
-        card.appendChild(el("div", "te-artist-name", nameHtml));
+        /* Name (no tier badge) */
+        card.appendChild(el("div", "te-artist-name", artist.name));
 
         /* Rate display */
         var rateText = "";
@@ -966,6 +1007,14 @@
       priceBox.appendChild(el("p", "te-base", baseText));
       body.appendChild(priceBox);
 
+      /* Custom disclaimer — bold, right after price box */
+      if (config.customDisclaimer) {
+        var priceDiscBox = el("div", "te-custom-disclaimer");
+        priceDiscBox.style.fontWeight = "700";
+        priceDiscBox.innerHTML = config.customDisclaimer;
+        body.appendChild(priceDiscBox);
+      }
+
       /* Multi-session flag */
       if (sessions > 1) {
         var flag = el("div", "te-multi-session-flag");
@@ -1026,13 +1075,6 @@
         body.appendChild(uploadSection);
       }
 
-      /* Custom disclaimer */
-      if (config.customDisclaimer) {
-        var discBox = el("div", "te-custom-disclaimer");
-        discBox.innerHTML = config.customDisclaimer;
-        body.appendChild(discBox);
-      }
-
       /* ── Build consultation email body ── */
       function buildEmailBody() {
         var lines = [];
@@ -1074,7 +1116,7 @@
           "?subject=" + encodeURIComponent(emailSubject) +
           "&body=" + encodeURIComponent(emailBody);
 
-        var emailBtn = el("a", "te-btn te-btn-book", "\ud83d\udce9 Send Consultation Request");
+        var emailBtn = el("a", "te-btn te-btn-book", "\ud83d\udce9 Email Us Now");
         emailBtn.href = mailtoUrl;
         body.appendChild(emailBtn);
 
@@ -1088,18 +1130,25 @@
 
       /* Booking CTA (fallback or in addition to email) */
       if (CFG.booking) {
-        var bookBtn = el("a", "te-btn " + (CFG.email ? "te-btn-outline" : "te-btn-book"), (CFG.email ? "Or Book Online \u2192" : "Get Your Exact Quote \u2192"));
+        var bookBtn = el("a", "te-btn " + (CFG.email ? "te-btn-outline" : "te-btn-book"), (CFG.email ? "Or Book Online \u2192" : "Email Us Now \u2192"));
         bookBtn.href = CFG.booking;
         bookBtn.target = "_blank";
         bookBtn.rel = "noopener noreferrer";
         body.appendChild(bookBtn);
       }
 
-      /* Products / Aftercare */
-      if (config.products && config.products.length > 0) {
+      /* Products / Aftercare — use config products if provided, otherwise affiliate defaults */
+      var useProducts = (config.products && config.products.length > 0) ? config.products : DEFAULT_PRODUCTS;
+      var useTitle = config.productsTitle || DEFAULT_PRODUCTS_TITLE;
+      var useSub = config.productsSubtitle || ((!config.products || config.products.length === 0) ? DEFAULT_PRODUCTS_SUBTITLE : "");
+
+      if (useProducts.length > 0) {
         var aftercare = el("div", "te-aftercare");
-        aftercare.appendChild(el("h4", "", config.productsTitle || "Recommended Products"));
-        config.products.forEach(function (p) {
+        aftercare.appendChild(el("h4", "", useTitle));
+        if (useSub) {
+          aftercare.appendChild(el("p", "te-aftercare-sub", useSub));
+        }
+        useProducts.forEach(function (p) {
           var card = el("div", "te-product");
           var info = el("div", "te-product-info");
           info.appendChild(el("div", "te-product-name", p.name));
@@ -1134,11 +1183,6 @@
         buildForm();
       });
       body.appendChild(recalc);
-
-      /* Disclaimer */
-      if (config.disclaimer) {
-        body.appendChild(el("div", "te-disclaimer", config.disclaimer));
-      }
 
       /* Powered by */
       var powered = el("div", "te-powered");

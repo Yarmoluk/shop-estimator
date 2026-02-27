@@ -205,7 +205,7 @@
     <div class="proof-card">
       <div class="icon">&#x1f4c5;</div>
       <h4>Books Clients</h4>
-      <p>"Get Your Exact Quote" links straight to your booking page.</p>
+      <p>"Email Us Now" sends an inquiry with all their selections pre-filled.</p>
     </div>
     <div class="proof-card">
       <div class="icon">&#x26a1;</div>
@@ -399,8 +399,7 @@
 <!-- ═══ FOOTER ═══ -->
 <footer class="footer">
   <p>Built by <a href="https://github.com/Yarmoluk" target="_blank">Dan Yarmoluk</a></p>
-  <p style="margin-top:.5rem">As an Amazon Associate I earn from qualifying purchases. Aftercare product links are affiliate links — if you buy through them, I may earn a small commission at no extra cost to you.</p>
-  <p style="margin-top:.5rem">Pricing estimates are approximate and set by individual businesses. This tool provides general ranges only — final pricing is always determined by the service provider during consultation. This software is provided as-is with no warranty.</p>
+  <p style="margin-top:.5rem">Pricing estimates are approximate and set by individual businesses. This tool provides general ranges only — final pricing is always determined by the service provider during consultation.</p>
 </footer>
 
 <script>
@@ -411,7 +410,7 @@ function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 
 function addArtist() {
   if (artists.length >= MAX_ARTISTS) return;
-  artists.push({ name:'', tier:'Senior', hourly:'150', rateType:'hourly', bio:'', styles:'' });
+  artists.push({ name:'', hourly:'150', rateType:'hourly', bio:'', styles:'' });
   renderArtists();
   updateCode();
 }
@@ -435,13 +434,6 @@ function renderArtists() {
         '<input class="cfg-input" placeholder="Artist name" value="'+esc(a.name)+'" oninput="artists['+i+'].name=this.value;updateCode()">' +
       '</div>' +
       '<div class="cfg-artist-row">' +
-        '<select class="cfg-input" onchange="artists['+i+'].tier=this.value;updateCode()">' +
-          '<option value="Junior"'+(a.tier==='Junior'?' selected':'')+'>Junior</option>' +
-          '<option value="Senior"'+(a.tier==='Senior'?' selected':'')+'>Senior</option>' +
-          '<option value="Master"'+(a.tier==='Master'?' selected':'')+'>Master</option>' +
-          '<option value="Owner"'+(a.tier==='Owner'?' selected':'')+'>Owner</option>' +
-          '<option value="Guest"'+(a.tier==='Guest'?' selected':'')+'>Guest</option>' +
-        '</select>' +
         '<select class="cfg-input" onchange="artists['+i+'].rateType=this.value;updateCode();renderArtists()">' +
           '<option value="hourly"'+(a.rateType==='hourly'?' selected':'')+'>Hourly rate</option>' +
           '<option value="flat"'+(a.rateType==='flat'?' selected':'')+'>Flat / day rate</option>' +
@@ -474,7 +466,7 @@ function buildArtistsJSON() {
   var arr = [];
   artists.forEach(function(a) {
     if (!a.name.trim()) return;
-    var obj = { name: a.name.trim(), tier: a.tier };
+    var obj = { name: a.name.trim() };
     if (a.rateType === 'flat') {
       obj.rateType = 'flat';
       obj.rates = [];

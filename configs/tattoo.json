@@ -7,6 +7,7 @@
     "minimum": 80,
     "hourly": 150,
     "accent": "#e94560",
+    "email": "info@incinksanctum.com",
     "booking": "",
     "maxSession": 4
   },
@@ -14,7 +15,6 @@
   "artists": [
     {
       "name": "Your Artist Name",
-      "tier": "Senior",
       "hourly": 150,
       "rateType": "hourly",
       "bio": "Short bio — specialties, experience, vibe.",
@@ -22,7 +22,6 @@
     },
     {
       "name": "Another Artist",
-      "tier": "Junior",
       "hourly": 100,
       "rateType": "hourly",
       "bio": "Great for smaller pieces and clean line work.",
@@ -81,6 +80,7 @@
             { "label": "Color", "desc": "Single or multiple colors in various saturations", "mult": 1.1 },
             { "label": "Cartoon / Anime", "desc": "Bold lines, solid color, stylized art and graphic", "mult": 1.1 },
             { "label": "Illustrative", "desc": "Hand drawn or hand painted appearance", "mult": 1.2 },
+            { "label": "Small Delicate", "desc": "Minimal, dainty designs with thin precise lines", "mult": 0.9 },
             { "label": "Japanese", "desc": "Bold lines, solid color, use of negative space (skin) and design", "mult": 1.35 },
             { "label": "Ornamental / Henna / Mandala", "desc": "Mix of bold and fine lines and various shading styles with lines", "mult": 1.25 },
             { "label": "Lettering", "desc": "Large, small, multiple font options", "mult": 0.85 },
@@ -198,6 +198,7 @@
     }
   ],
   "productsTitle": "Recommended Aftercare",
+  "productsSubtitle": "Aftercare is available for purchase at Ink Sanctum.",
   "productsCombo": {
     "label": "Combo Deal: Any soap + any aftercare lotion",
     "discount": 5,

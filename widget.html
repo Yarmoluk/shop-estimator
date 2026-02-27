@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Tattoo Price Estimator</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -71,6 +71,13 @@
   .tw-estimate-box .est-range { font-size: 2.5rem; font-weight: 800; color: #fff; margin: 0.5rem 0; }
   .tw-estimate-box .est-note { font-size: 0.8rem; color: #888; }
 
+  .tw-custom-disclaimer {
+    background: #1e2a45; border: 1px solid #2a3a5a; border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 1.25rem; font-size: 0.8rem;
+    color: #94a3b8; line-height: 1.6; font-weight: 700;
+  }
+  .tw-custom-disclaimer strong { color: #fff; }
+
   .tw-breakdown { margin: 1.25rem 0; }
   .tw-breakdown-row {
     display: flex; justify-content: space-between;
@@ -96,10 +103,11 @@
   .tw-session-bar .bar-time { font-size: 0.8rem; color: #888; white-space: nowrap; }
 
   .tw-aftercare {
-    background: #1e3a1e; border: 1px solid #43a047; border-radius: 10px;
+    background: #1a2a4e; border: 1px solid #365C9E; border-radius: 10px;
     padding: 1.25rem; margin: 1.25rem 0;
   }
-  .tw-aftercare h4 { color: #43a047; margin-bottom: 0.75rem; }
+  .tw-aftercare h4 { color: #365C9E; margin-bottom: 0.25rem; }
+  .tw-aftercare .tw-aftercare-sub { font-size: 0.82rem; color: #8aa3c8; margin-bottom: 0.75rem; }
   .tw-aftercare-item {
     display: flex; align-items: center; gap: 0.75rem;
     padding: 0.6rem; background: rgba(255,255,255,0.05); border-radius: 8px;
@@ -109,7 +117,7 @@
   .tw-aftercare-item .ac-info strong { display: block; color: #fff; font-size: 0.9rem; }
   .tw-aftercare-item .ac-info span { font-size: 0.8rem; color: #aaa; }
   .tw-aftercare-item a {
-    background: #43a047; color: white; padding: 0.4rem 0.75rem;
+    background: #365C9E; color: white; padding: 0.4rem 0.75rem;
     border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 600;
     white-space: nowrap;
   }
@@ -126,12 +134,22 @@
     font-weight: 700; font-size: 1rem;
   }
 
-  .tw-disclaimer { font-size: 0.7rem; color: #555; text-align: center; margin-top: 1rem; padding: 0 1rem; }
-
   .tw-recalc {
     background: none; border: 1px solid #e94560; color: #e94560;
     padding: 0.6rem 1.5rem; border-radius: 6px; cursor: pointer;
     font-size: 0.9rem; display: block; margin: 1rem auto 0;
+  }
+
+  /* ── Mobile Responsive ── */
+  @media (max-width: 600px) {
+    .tattoo-widget { margin: 0; border-radius: 0; }
+    .tw-body { padding: 1.25rem; }
+    .tw-header { padding: 1.25rem; }
+    .tw-header h2 { font-size: 1.25rem; }
+    .tw-option { min-width: 100%; }
+    .tw-estimate-box .est-range { font-size: 2rem; }
+    .tw-aftercare-item { flex-direction: column; align-items: flex-start; }
+    .tw-aftercare-item a { margin-top: 0.5rem; }
   }
 </style>
 </head>
@@ -176,16 +194,13 @@
         <label>Placement</label>
         <div class="tw-options" id="placementOptions">
           <div class="tw-option" data-value="easy" onclick="selectOption(this,'placement')">
-            <span class="opt-label">Standard</span>
-            <span class="opt-desc">Arm, leg, back, chest</span>
+            <span class="opt-label">Arm, Leg, Back, Chest</span>
           </div>
           <div class="tw-option" data-value="moderate" onclick="selectOption(this,'placement')">
-            <span class="opt-label">Moderate</span>
-            <span class="opt-desc">Ribs, neck, foot, hand</span>
+            <span class="opt-label">Ribs, Neck, Foot, Hand</span>
           </div>
           <div class="tw-option" data-value="difficult" onclick="selectOption(this,'placement')">
-            <span class="opt-label">Difficult</span>
-            <span class="opt-desc">Fingers, face, elbow, knee</span>
+            <span class="opt-label">Fingers, Face, Elbow, Knee</span>
           </div>
         </div>
       </div>
@@ -194,8 +209,8 @@
         <label>Style</label>
         <div class="tw-options" id="styleOptions">
           <div class="tw-option" data-value="linework" onclick="selectOption(this,'style')">
-            <span class="opt-label">Line Work</span>
-            <span class="opt-desc">Fine line, minimal, script</span>
+            <span class="opt-label">Small Delicate</span>
+            <span class="opt-desc">Minimal, dainty, thin lines</span>
           </div>
           <div class="tw-option" data-value="traditional" onclick="selectOption(this,'style')">
             <span class="opt-label">Traditional</span>
@@ -242,14 +257,18 @@
   <div class="tw-results" id="tw-results">
     <div class="tw-header">
       <h2>Your Tattoo Estimate</h2>
-      <p>From <span class="tw-shop-name" id="shopName2">Your Shop Name</span></p>
+      <p>From <span class="tw-shop-name" id="shopName2">Ink Sanctum</span></p>
     </div>
     <div class="tw-body">
 
       <div class="tw-estimate-box">
         <div class="est-label">Estimated Price Range</div>
         <div class="est-range" id="priceRange">$150 — $300</div>
-        <div class="est-note">Based on average shop rates in your area. Custom work varies by artist.</div>
+        <div class="est-note">Based on your artist's rates. Custom work varies.</div>
+      </div>
+
+      <div class="tw-custom-disclaimer">
+        Estimates for time and cost are <strong><u>approximations only</u></strong> and may adjust at artist discretion. Factors such as client personal/mental health and self-care may affect skin condition and scheduling, thus influencing these estimates. Your artist will discuss these details with you at your free in-person consultation.
       </div>
 
       <div class="tw-breakdown" id="breakdown"></div>
@@ -257,49 +276,37 @@
       <div class="tw-sessions" id="sessionInfo"></div>
 
       <div class="tw-aftercare">
-        <h4>Aftercare Essentials</h4>
-        <p style="font-size:0.85rem;color:#aaa;margin-bottom:0.75rem;">Proper aftercare is the difference between a tattoo that heals beautifully and one that fades, scars, or gets infected. These are what professional artists recommend:</p>
+        <h4>Recommended Aftercare</h4>
+        <p class="tw-aftercare-sub">Aftercare is available for purchase at Ink Sanctum.</p>
         <div class="tw-aftercare-item">
           <div class="ac-info">
-            <strong>Mad Rabbit Tattoo Balm</strong>
-            <span>Natural healing balm — #1 rated tattoo aftercare. Use for first 2 weeks.</span>
+            <strong>Reborn Aftercare Unscented Foaming Soap</strong>
+            <span>Gentle unscented foaming soap for fresh tattoo care.</span>
           </div>
-          <a href="#">$19.99 — Shop</a>
+          <a href="#">$15</a>
         </div>
         <div class="tw-aftercare-item">
           <div class="ac-info">
-            <strong>Hustle Butter Deluxe</strong>
-            <span>Vegan tattoo care — works during AND after the tattoo session.</span>
+            <strong>Reborn Aftercare Balm — Unscented</strong>
+            <span>All-purpose unscented aftercare balm.</span>
           </div>
-          <a href="#">$24.99 — Shop</a>
+          <a href="#">$15</a>
         </div>
         <div class="tw-aftercare-item">
           <div class="ac-info">
-            <strong>Saniderm Bandage (3-pack)</strong>
-            <span>Medical-grade second-skin bandage. Most shops use this now — keep extras at home.</span>
+            <strong>Reborn Aftercare CBD Balm — Lavender</strong>
+            <span>CBD-infused lavender aftercare balm.</span>
           </div>
-          <a href="#">$14.99 — Shop</a>
-        </div>
-        <div class="tw-aftercare-item">
-          <div class="ac-info">
-            <strong>EltaMD UV Sport SPF 50</strong>
-            <span>Best sunscreen for tattoos. UV fades ink fast — protect your investment.</span>
-          </div>
-          <a href="#">$29.99 — Shop</a>
+          <a href="#">$20</a>
         </div>
       </div>
 
       <div class="tw-cta-book">
-        <p>Ready to book? Consultations are free at most shops.</p>
-        <a href="#" id="bookingLink">Book a Consultation</a>
-        <p style="font-size:0.75rem;color:#666;margin-top:0.5rem;">Bring this estimate — it helps your artist plan your session.</p>
+        <p>Ready to get started?</p>
+        <a href="mailto:info@incinksanctum.com" id="bookingLink">Email Us Now</a>
       </div>
 
       <button class="tw-recalc" onclick="resetForm()">← Recalculate</button>
-
-      <div class="tw-disclaimer">
-        Estimates are approximate and vary by artist, shop, and location. This tool provides a general range based on industry averages. Always consult directly with your artist for an exact quote. Aftercare product links may earn us a small commission at no cost to you.
-      </div>
     </div>
   </div>
 </div>
@@ -334,7 +341,7 @@ function estimate() {
 
   // Shop minimum and hourly rate
   const shopMin = 80;
-  const hourlyRate = 150; // national average
+  const hourlyRate = 150;
   let baseCost = Math.max(shopMin, baseHours * hourlyRate);
 
   const factors = [];
@@ -342,14 +349,14 @@ function estimate() {
 
   // Placement multiplier
   const placementMult = { easy: 1.0, moderate: 1.2, difficult: 1.4 };
-  const placementLabels = { easy: 'Standard placement', moderate: 'Moderate difficulty area', difficult: 'Difficult placement (+40%)' };
+  const placementLabels = { easy: 'Arm, Leg, Back, Chest', moderate: 'Ribs, Neck, Foot, Hand', difficult: 'Fingers, Face, Elbow, Knee (+40%)' };
   const pm = placementMult[selections.placement];
   baseCost *= pm;
   if (pm > 1) factors.push({ label: placementLabels[selections.placement], impact: '+' + Math.round((pm-1)*100) + '%', pct: pm - 1 });
 
   // Style multiplier
   const styleMult = { linework: 0.9, traditional: 1.0, realism: 1.5, geometric: 1.3 };
-  const styleLabels = { linework: 'Line work (efficient)', traditional: 'Traditional (standard)', realism: 'Realism (+50% — most time-intensive)', geometric: 'Geometric/Dotwork (+30%)' };
+  const styleLabels = { linework: 'Small Delicate (efficient)', traditional: 'Traditional (standard)', realism: 'Realism (+50%)', geometric: 'Geometric/Dotwork (+30%)' };
   const sm = styleMult[selections.style];
   baseCost *= sm;
   factors.push({ label: styleLabels[selections.style], impact: sm < 1 ? '-10%' : (sm > 1 ? '+' + Math.round((sm-1)*100) + '%' : 'Standard rate'), pct: sm - 1 });
@@ -375,8 +382,29 @@ function estimate() {
   const sessionsNeeded = Math.ceil(totalHours / 4); // max 4-hour sessions typical
   const healingWeeks = selections.size === 'large' ? '4-6' : selections.size === 'medium' ? '2-4' : '2-3';
 
+  // Build email body
+  const emailSubject = encodeURIComponent('Consultation Request — Ink Sanctum ($' + low + '-$' + high + ')');
+  let emailBodyLines = [
+    'Hi Ink Sanctum,',
+    '',
+    'I used your pricing estimator and got an estimate of $' + low + ' - $' + high + '.',
+    "I'd like to book a consultation. Here are my details:",
+    '',
+    '--- My Selections ---'
+  ];
+  factors.forEach(f => emailBodyLines.push(f.label + ': ' + f.impact));
+  if (sessionsNeeded > 1) {
+    emailBodyLines.push('Estimated sessions: ' + sessionsNeeded + ' (' + totalHours.toFixed(1) + ' total hours)');
+  } else {
+    emailBodyLines.push('Estimated time: ' + totalHours.toFixed(1) + ' hours (single session)');
+  }
+  emailBodyLines.push('', 'Looking forward to hearing from you!');
+  const emailBody = encodeURIComponent(emailBodyLines.join('\n'));
+  const mailtoUrl = 'mailto:info@incinksanctum.com?subject=' + emailSubject + '&body=' + emailBody;
+
   // Render
   document.getElementById('priceRange').textContent = '$' + low + ' — $' + high;
+  document.getElementById('bookingLink').href = mailtoUrl;
 
   // Breakdown
   const bd = document.getElementById('breakdown');
